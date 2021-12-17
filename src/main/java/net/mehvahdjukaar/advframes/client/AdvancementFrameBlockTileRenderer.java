@@ -5,6 +5,7 @@ import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.advframes.blocks.AdvancementFrameBlock;
 import net.mehvahdjukaar.advframes.blocks.AdvancementFrameBlockTile;
+import net.mehvahdjukaar.advframes.init.ClientSetup;
 import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.client.GraphicsStatus;
 import net.minecraft.client.Minecraft;
@@ -21,7 +22,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
@@ -60,15 +63,30 @@ public class AdvancementFrameBlockTileRenderer<T extends AdvancementFrameBlockTi
 
             poseStack.pushPose();
 
+            ResourceLocation r = switch (advancement.getFrame()) {
+                case GOAL -> ClientSetup.GOAL_MODEL;
+                case TASK -> ClientSetup.TASK_MODEL;
+                case CHALLENGE -> ClientSetup.CHALLENGE_MODEL;
+            };
+
+            poseStack.pushPose();
+            poseStack.translate(0, 0, -0.041f);
+            BakedModel frame = itemRenderer.getItemModelShaper().getModelManager().getModel(r);
+            itemRenderer.render(Items.DIAMOND.getDefaultInstance(),
+                    ItemTransforms.TransformType.GUI, false, poseStack, buffer, light, overlay, frame);
+
+            poseStack.popPose();
             ItemStack stack = advancement.getIcon();
 
 
             //itemRenderer.renderStatic(stack, ItemTransforms.TransformType.GUI, light, overlay, poseStack, buffer, 0);
             BakedModel itemModel = itemRenderer.getModel(stack, null, null, 0);
-            poseStack.scale(0.5F, 0.5F, 0.5f);
+            poseStack.scale(0.5f, 0.5f, 0.5f);
 
             if (!itemModel.isGui3d()) {
+
                 poseStack.translate(0, 0, -0.049f);
+
                 itemRenderer.render(stack, ItemTransforms.TransformType.GUI, false, poseStack, buffer, light, overlay, itemModel);
             } else {
                 poseStack.scale(1F, 1F, 0.0001f);
@@ -135,33 +153,49 @@ public class AdvancementFrameBlockTileRenderer<T extends AdvancementFrameBlockTi
                         if (d0 < 16 * 16) {
                             //poseStack.mulPose(entityRenderer.cameraOrientation());
 
-                            float f1 = minecraft.options.getBackgroundOpacity(0.25F);
-                            int opacity = (int) (f1 * 255.0F) << 24;
+                            //float f1 = minecraft.options.getBackgroundOpacity(0.25F);
+                            int opacity = 0;// (int) (f1 * 255.0F) << 24;
 
                             poseStack.pushPose();
-                            poseStack.translate(0, 0.5, 0.0125);
-                            poseStack.scale(0.025F, -0.025F, -0.025F);
+
+                            Component component = advancement.getTitle();
+
+                            float width = font.width(component);
+                            float scale = 0.025f;
+                            if (width > 48) {
+                                scale /= width / 48;
+                            }
+
+
+                            poseStack.translate(0, 0.375 + 4 * scale, 0.0125);
+                            poseStack.scale(scale, -scale, -scale);
                             Matrix4f matrix4f = poseStack.last().pose();
 
-                            Component title = advancement.getTitle();
-                            float dx = (float) (-font.width(title) / 2);
+                            float dx = -width / 2f;
 
 
-                            font.drawInBatch(title, dx, 0, tile.getColor().getColor(), false, matrix4f, buffer, false, opacity, light);
+                            font.drawInBatch(component, dx, 0, tile.getColor().getColor(), true, matrix4f, buffer, false, opacity, light);
                             poseStack.popPose();
 
                             String name = tile.getOwner().getName();
 
                             if (name != null && !name.isEmpty()) {
-                                title = new TextComponent(name);
+                                component = new TextComponent(name);
                                 poseStack.pushPose();
-                                poseStack.translate(0, -0.25, 0.0125);
-                                poseStack.scale(0.025F, -0.025F, -0.025F);
+
+                                width = font.width(component);
+                                scale = 0.025f;
+                                if (width > 48) {
+                                    scale /= width / 48;
+                                }
+
+                                poseStack.translate(0, -0.375 + 4 * scale, 0.0125);
+                                poseStack.scale(scale, -scale, -scale);
                                 matrix4f = poseStack.last().pose();
 
-                                dx = (float) (-font.width(title) / 2);
+                                dx = -width / 2;
 
-                                font.drawInBatch(title, dx, 0, -1, false, matrix4f, buffer, false, opacity, light);
+                                font.drawInBatch(component, dx, 0, -1, true, matrix4f, buffer, false, opacity, light);
                                 poseStack.popPose();
                             }
                         }
@@ -177,6 +211,6 @@ public class AdvancementFrameBlockTileRenderer<T extends AdvancementFrameBlockTi
 
     @Override
     public int getViewDistance() {
-        return 48;
+        return 64;
     }
 }

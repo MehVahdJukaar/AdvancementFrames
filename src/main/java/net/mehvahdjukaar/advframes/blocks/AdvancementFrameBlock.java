@@ -15,7 +15,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -25,6 +24,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -32,7 +32,6 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathComputationType;
@@ -52,39 +51,18 @@ public class AdvancementFrameBlock extends Block implements EntityBlock, SimpleW
 
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
-    public static final EnumProperty<FrameType> TYPE = EnumProperty.create("type", FrameType.class);
-
-    public enum FrameType implements StringRepresentable {
-        EMPTY("empty"),
-        TASK("task"),
-        GOAL("goal"),
-        CHALLENGE("challenge");
-        private final String name;
-
-        FrameType(String name) {
-            this.name = name;
-        }
-
-        @Override
-        public String getSerializedName() {
-            return this.name;
-        }
-
-        public static FrameType fromAdvancement(DisplayInfo advancement) {
-            var type = advancement.getFrame();
-            return switch (type) {
-                case GOAL -> GOAL;
-                case TASK -> TASK;
-                case CHALLENGE -> CHALLENGE;
-            };
-        }
-    }
 
     public AdvancementFrameBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH)
-                .setValue(WATERLOGGED, false).setValue(TYPE, FrameType.EMPTY));
+                .setValue(WATERLOGGED, false));
     }
+
+    @Override
+    public boolean canSurvive(BlockState state, LevelReader worldIn, BlockPos pos) {
+        return worldIn.getBlockState(pos.relative(state.getValue(FACING).getOpposite())).getMaterial().isSolid();
+    }
+
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext p_60558_) {
@@ -110,7 +88,7 @@ public class AdvancementFrameBlock extends Block implements EntityBlock, SimpleW
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING, WATERLOGGED, TYPE);
+        builder.add(FACING, WATERLOGGED);
     }
 
     @Override
@@ -133,7 +111,8 @@ public class AdvancementFrameBlock extends Block implements EntityBlock, SimpleW
         if (stateIn.getValue(WATERLOGGED)) {
             worldIn.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
         }
-        return stateIn;
+        return facing == stateIn.getValue(FACING).getOpposite() && !stateIn.canSurvive(worldIn, currentPos)
+                ? Blocks.AIR.defaultBlockState() : stateIn;
     }
 
     @Override

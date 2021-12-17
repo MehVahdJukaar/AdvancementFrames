@@ -14,8 +14,11 @@ import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.GameProfileCache;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -28,6 +31,7 @@ import java.util.function.Consumer;
 
 public class AdvancementFrameBlockTile extends BlockEntity {
 
+    private String advancementId = null;
     private DisplayInfo advancement;
     private GameProfile owner;
 
@@ -37,20 +41,29 @@ public class AdvancementFrameBlockTile extends BlockEntity {
 
     public void setAdvancement(Advancement advancement, ServerPlayer player) {
         this.advancement = advancement.getDisplay();
+        this.advancementId = advancement.getId().toString();
         this.setOwner(new GameProfile(player.getUUID(), null));
-        this.level.setBlockAndUpdate(this.worldPosition, this.getBlockState()
-                .setValue(AdvancementFrameBlock.TYPE, AdvancementFrameBlock.FrameType.fromAdvancement(this.advancement)));
     }
 
 
     @Override
     protected void saveAdditional(CompoundTag cmp) {
         super.saveAdditional(cmp);
-        if (this.owner != null) {
-            cmp.putUUID("PlayerID", owner.getId());
-        }
         if (this.advancement != null) {
+
+
+            if(this.level instanceof ServerLevel server && this.owner != null && this.advancementId != null && !this.advancementId.isEmpty()){
+                Advancement a = server.getServer().getAdvancements().getAdvancement(new ResourceLocation(this.advancementId));
+                Player player = this.level.getPlayerByUUID(this.owner.getId());
+                if(a == null || (player instanceof ServerPlayer sp && !sp.getAdvancements().getOrStartProgress(a).isDone())) {
+                    return;
+                }
+            }
+
             CompoundTag tag = new CompoundTag();
+            if(this.advancementId != null) {
+                cmp.putString("ID", this.advancementId);
+            }
             Component title = advancement.getTitle();
             if (title instanceof TranslatableComponent translatableComponent) {
                 tag.putString("Title", translatableComponent.getKey());
@@ -67,17 +80,24 @@ public class AdvancementFrameBlockTile extends BlockEntity {
             tag.putInt("FrameType", advancement.getFrame().ordinal());
             cmp.put("Advancement", tag);
         }
+        if (this.owner != null) {
+            cmp.putUUID("PlayerID", owner.getId());
+        }
     }
 
     @Override
     public void load(CompoundTag cmp) {
         super.load(cmp);
+        this.advancementId = null;
         if (cmp.contains("PlayerID")) {
             UUID id = cmp.getUUID("PlayerID");
             this.setOwner(new GameProfile(id, null));
         }
         if (cmp.contains("Advancement")) {
             CompoundTag tag = cmp.getCompound("Advancement");
+            if(cmp.contains("ID")) {
+                this.advancementId = tag.getString("ID");
+            }
             TranslatableComponent title = new TranslatableComponent(tag.getString("Title"));
             TranslatableComponent description = new TranslatableComponent(tag.getString("Description"));
             ItemStack icon = ItemStack.of(tag.getCompound("Icon"));
