@@ -52,16 +52,16 @@ public class AdvancementFrameBlockTile extends BlockEntity {
         if (this.advancement != null) {
 
 
-            if(this.level instanceof ServerLevel server && this.owner != null && this.advancementId != null && !this.advancementId.isEmpty()){
+            if (this.level instanceof ServerLevel server && this.owner != null && this.advancementId != null && !this.advancementId.isEmpty()) {
                 Advancement a = server.getServer().getAdvancements().getAdvancement(new ResourceLocation(this.advancementId));
                 Player player = this.level.getPlayerByUUID(this.owner.getId());
-                if(a == null || (player instanceof ServerPlayer sp && !sp.getAdvancements().getOrStartProgress(a).isDone())) {
+                if (a == null || (player instanceof ServerPlayer sp && !sp.getAdvancements().getOrStartProgress(a).isDone())) {
                     return;
                 }
             }
 
             CompoundTag tag = new CompoundTag();
-            if(this.advancementId != null) {
+            if (this.advancementId != null) {
                 cmp.putString("ID", this.advancementId);
             }
             Component title = advancement.getTitle();
@@ -95,7 +95,7 @@ public class AdvancementFrameBlockTile extends BlockEntity {
         }
         if (cmp.contains("Advancement")) {
             CompoundTag tag = cmp.getCompound("Advancement");
-            if(cmp.contains("ID")) {
+            if (cmp.contains("ID")) {
                 this.advancementId = tag.getString("ID");
             }
             TranslatableComponent title = new TranslatableComponent(tag.getString("Title"));
@@ -188,4 +188,5 @@ public class AdvancementFrameBlockTile extends BlockEntity {
         sessionService = null;
         mainThreadExecutor = null;
     }
+
 }

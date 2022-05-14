@@ -3,8 +3,8 @@ package net.mehvahdjukaar.advframes.init;
 import net.mehvahdjukaar.advframes.AdvFrames;
 import net.mehvahdjukaar.advframes.blocks.AdvancementFrameBlock;
 import net.mehvahdjukaar.advframes.blocks.AdvancementFrameBlockTile;
+import net.mehvahdjukaar.advframes.items.AdvancementFrameItem;
 import net.mehvahdjukaar.advframes.network.NetworkHandler;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -17,8 +17,6 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-
-import java.util.function.Supplier;
 
 public class ModRegistry {
 
@@ -33,14 +31,9 @@ public class ModRegistry {
         NetworkHandler.registerMessages();
     }
 
-    private static RegistryObject<Item> regItem(String name, Supplier<? extends Item> sup) {
-        return ITEMS.register(name, sup);
-    }
-
     protected static RegistryObject<Item> regBlockItem(RegistryObject<Block> blockSup, CreativeModeTab group) {
-        return regItem(blockSup.getId().getPath(), () -> new BlockItem(blockSup.get(), (new Item.Properties()).tab(group)));
+        return ITEMS.register(blockSup.getId().getPath(), () -> new AdvancementFrameItem(blockSup.get(), (new Item.Properties()).tab(group)));
     }
-
 
     public static final String ADVANCEMENT_FRAME_NAME = "advancement_frame";
     public static final RegistryObject<Block> ADVANCEMENT_FRAME = BLOCKS.register(ADVANCEMENT_FRAME_NAME, () -> new AdvancementFrameBlock(

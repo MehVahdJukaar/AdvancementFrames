@@ -142,7 +142,6 @@ public class AdvancementFrameBlockTileRenderer<T extends AdvancementFrameBlockTi
 
             poseStack.popPose();
 
-
             if (Minecraft.renderNames()) {
                 HitResult hit = minecraft.hitResult;
                 if (hit != null && hit.getType() == HitResult.Type.BLOCK) {
@@ -206,7 +205,6 @@ public class AdvancementFrameBlockTileRenderer<T extends AdvancementFrameBlockTi
 
             poseStack.popPose();
         }
-
     }
 
     @Override
