@@ -1,17 +1,19 @@
 package net.mehvahdjukaar.advframes.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Matrix3f;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.advframes.blocks.AdvancementFrameBlock;
 import net.mehvahdjukaar.advframes.blocks.AdvancementFrameBlockTile;
 import net.mehvahdjukaar.advframes.init.ClientSetup;
+import net.mehvahdjukaar.selene.client.texture_renderer.RenderedTexturesManager;
 import net.minecraft.advancements.DisplayInfo;
-import net.minecraft.client.GraphicsStatus;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -19,7 +21,6 @@ import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -27,8 +28,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-
-import java.util.function.Consumer;
 
 public class AdvancementFrameBlockTileRenderer<T extends AdvancementFrameBlockTile> implements BlockEntityRenderer<T> {
 
@@ -69,6 +68,7 @@ public class AdvancementFrameBlockTileRenderer<T extends AdvancementFrameBlockTi
                 case CHALLENGE -> ClientSetup.CHALLENGE_MODEL;
             };
 
+
             poseStack.pushPose();
             poseStack.translate(0, 0, -0.041f);
             BakedModel frame = itemRenderer.getItemModelShaper().getModelManager().getModel(r);
@@ -76,9 +76,28 @@ public class AdvancementFrameBlockTileRenderer<T extends AdvancementFrameBlockTi
                     ItemTransforms.TransformType.GUI, false, poseStack, buffer, light, overlay, frame);
 
             poseStack.popPose();
+
             ItemStack stack = advancement.getIcon();
 
 
+            ResourceLocation tex = RenderedTexturesManager.getFlatItemTexture(stack.getItem(), 64).getTextureLocation();
+            VertexConsumer vertexConsumer = buffer.getBuffer(RenderType.entityCutout(tex));
+
+            Matrix4f tr = poseStack.last().pose();
+            Matrix3f normal = poseStack.last().normal();
+
+            float z = 0f;
+            float s = 0.25f;
+            //poseStack.translate(0.5, 0.5, 0);
+            vertexConsumer.vertex(tr, -s, s, z).color(1f, 1f, 1f, 1f).uv(0f, 1f).overlayCoords(overlay).uv2(light).normal(normal, 0f, 0f, 1f).endVertex();
+            vertexConsumer.vertex(tr, -s, -s, z).color(1f, 1f, 1f, 1f).uv(0f, 0f).overlayCoords(overlay).uv2(light).normal(normal, 0f, 0f, 1f).endVertex();
+
+            vertexConsumer.vertex(tr, s, -s, z).color(1f, 1f, 1f, 1f).uv(1f, 0f).overlayCoords(overlay).uv2(light).normal(normal, 0f, 0f, 1f).endVertex();
+            vertexConsumer.vertex(tr, s, s, z).color(1f, 1f, 1f, 1f).uv(1f, 1f).overlayCoords(overlay).uv2(light).normal(normal, 0f, 0f, 1f).endVertex();
+
+
+
+/*
             //itemRenderer.renderStatic(stack, ItemTransforms.TransformType.GUI, light, overlay, poseStack, buffer, 0);
             BakedModel itemModel = itemRenderer.getModel(stack, null, null, 0);
             poseStack.scale(0.5f, 0.5f, 0.5f);
@@ -139,6 +158,7 @@ public class AdvancementFrameBlockTileRenderer<T extends AdvancementFrameBlockTi
                 }
             }
 
+ */
 
             poseStack.popPose();
 

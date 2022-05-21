@@ -62,7 +62,6 @@ public class AdvancementFrameBlock extends Block implements EntityBlock, SimpleW
         return worldIn.getBlockState(pos.relative(state.getValue(FACING).getOpposite())).getMaterial().isSolid();
     }
 
-
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext p_60558_) {
         return switch (state.getValue(FACING)) {
