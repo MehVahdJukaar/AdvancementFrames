@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix3f;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3f;
+import net.mehvahdjukaar.advframes.AdvFrames;
 import net.mehvahdjukaar.advframes.blocks.AdvancementFrameBlock;
 import net.mehvahdjukaar.advframes.blocks.AdvancementFrameBlockTile;
 import net.mehvahdjukaar.advframes.init.ClientSetup;
@@ -28,6 +29,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+
+import java.util.Objects;
 
 public class AdvancementFrameBlockTileRenderer<T extends AdvancementFrameBlockTile> implements BlockEntityRenderer<T> {
 
@@ -80,7 +83,18 @@ public class AdvancementFrameBlockTileRenderer<T extends AdvancementFrameBlockTi
             ItemStack stack = advancement.getIcon();
 
 
-            ResourceLocation tex = RenderedTexturesManager.getFlatItemTexture(stack.getItem(), 64).getTextureLocation();
+            ResourceLocation tex;
+            //if it doesnt have fancy nbt we can use default optimized item renderer. useful since it can
+            ItemStack def = stack.getItem().getDefaultInstance();
+            if (false && ItemStack.isSameItemSameTags(def,stack)) {
+                tex = RenderedTexturesManager.getFlatItemTexture(stack.getItem(), 64).getTextureLocation();
+            } else {
+                //always renders animated cause its cooler
+                int i = Objects.hash(stack.getTag(),stack.getItem());
+                tex = RenderedTexturesManager.getFlatItemStackTexture(AdvFrames.res("" + i), stack, 64)
+                        .getTextureLocation();
+            }
+
             VertexConsumer vertexConsumer = buffer.getBuffer(RenderType.entityCutout(tex));
 
             Matrix4f tr = poseStack.last().pose();

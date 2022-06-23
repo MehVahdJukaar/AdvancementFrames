@@ -19,12 +19,27 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 
+import java.util.Objects;
+
 public class AdvancementSelectScreen extends AdvancementsScreen {
     private final AdvancementFrameBlockTile tile;
 
     public AdvancementSelectScreen(AdvancementFrameBlockTile tile,ClientAdvancements clientAdvancements) {
         super(clientAdvancements);
         this.tile = tile;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AdvancementSelectScreen that = (AdvancementSelectScreen) o;
+        return Objects.equals(tile, that.tile);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tile);
     }
 
     @Override

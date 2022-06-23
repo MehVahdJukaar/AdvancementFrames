@@ -149,24 +149,26 @@ public class AdvancementFrameBlock extends Block implements EntityBlock, SimpleW
     @OnlyIn(Dist.CLIENT)
     //not using set screen to avoid firing forge event since SOME mods like to override ANY screen that extends advancement screen (looking at you better advancements)
     public static void setScreen(AdvancementFrameBlockTile tile, Player player) {
-        Minecraft minecraft = Minecraft.getInstance();
-        Screen screen = new AdvancementSelectScreen(tile, ((LocalPlayer) player).connection.getAdvancements());
+        if(player instanceof LocalPlayer lp) {
+            Minecraft minecraft = Minecraft.getInstance();
+            Screen screen = new AdvancementSelectScreen(tile, lp.connection.getAdvancements());
 
-        ForgeHooksClient.clearGuiLayers(minecraft);
-        Screen old = minecraft.screen;
+            ForgeHooksClient.clearGuiLayers(minecraft);
+            Screen old = minecraft.screen;
 
-        if (old != null) {
-            old.removed();
+            if (old != null) {
+                old.removed();
+            }
+
+            minecraft.screen = screen;
+            BufferUploader.reset();
+            minecraft.mouseHandler.releaseMouse();
+            KeyMapping.releaseAll();
+            screen.init(minecraft, minecraft.getWindow().getGuiScaledWidth(), minecraft.getWindow().getGuiScaledHeight());
+            minecraft.noRender = false;
+
+            minecraft.updateTitle();
         }
-
-        minecraft.screen = screen;
-        BufferUploader.reset();
-        minecraft.mouseHandler.releaseMouse();
-        KeyMapping.releaseAll();
-        screen.init(minecraft, minecraft.getWindow().getGuiScaledWidth(), minecraft.getWindow().getGuiScaledHeight());
-        minecraft.noRender = false;
-
-        minecraft.updateTitle();
     }
 
     @Nullable
