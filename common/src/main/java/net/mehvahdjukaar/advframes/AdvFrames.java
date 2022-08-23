@@ -52,6 +52,7 @@ public class AdvFrames {
     //called on mod creation
     public static void commonInit() {
         NetworkHandler.registerMessages();
+
     }
 
 
