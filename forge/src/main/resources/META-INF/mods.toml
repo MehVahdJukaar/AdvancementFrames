@@ -9,7 +9,7 @@ license="All rights reserved"
 
 modId="advancementframes" #mandatory
 
-version="${file.jarVersion}" #mandatory
+version = "${version}"
 
 displayName="Advancement Frames" #mandatory
 
