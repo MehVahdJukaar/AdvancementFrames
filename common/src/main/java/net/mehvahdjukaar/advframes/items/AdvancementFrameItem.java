@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.advframes.items;
 
+import net.mehvahdjukaar.advframes.AdvFramesClient;
 import net.mehvahdjukaar.advframes.blocks.AdvancementFrameBlock;
 import net.mehvahdjukaar.advframes.blocks.AdvancementFrameBlockTile;
 import net.minecraft.core.BlockPos;
@@ -23,7 +24,7 @@ public class AdvancementFrameItem extends BlockItem {
         boolean flag = super.updateCustomBlockEntityTag(pos, level, player, stack, state);
         if (level.isClientSide && !flag && player != null) {
             if (level.getBlockEntity(pos) instanceof AdvancementFrameBlockTile tile) {
-                AdvancementFrameBlock.setScreen(tile, player);
+                AdvFramesClient.setAdvancementScreen(tile, player);
             }
         }
         return flag;

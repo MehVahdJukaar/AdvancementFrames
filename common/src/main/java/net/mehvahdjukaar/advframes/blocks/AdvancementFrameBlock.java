@@ -1,14 +1,9 @@
 package net.mehvahdjukaar.advframes.blocks;
 
 import com.mojang.authlib.GameProfile;
-import com.mojang.blaze3d.vertex.BufferUploader;
-import net.mehvahdjukaar.advframes.client.AdvancementSelectScreen;
+import net.mehvahdjukaar.advframes.AdvFramesClient;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.DisplayInfo;
-import net.minecraft.client.KeyMapping;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -33,9 +28,6 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.ForgeHooksClient;
 import org.jetbrains.annotations.Nullable;
 
 public class AdvancementFrameBlock extends Block implements EntityBlock, SimpleWaterloggedBlock {
@@ -123,7 +115,7 @@ public class AdvancementFrameBlock extends Block implements EntityBlock, SimpleW
         if (level.isClientSide) {
             if (level.getBlockEntity(pos) instanceof AdvancementFrameBlockTile tile) {
                 if (tile.getAdvancement() == null) {
-                    setScreen(tile, player);
+                    AdvFramesClient.setAdvancementScreen(tile, player);
                 } else {
                     GameProfile owner = tile.getOwner();
                     if (owner != null && owner.getName() != null) {
@@ -144,30 +136,6 @@ public class AdvancementFrameBlock extends Block implements EntityBlock, SimpleW
         return InteractionResult.sidedSuccess(level.isClientSide);
     }
 
-    @OnlyIn(Dist.CLIENT)
-    //not using set screen to avoid firing forge event since SOME mods like to override ANY screen that extends advancement screen (looking at you better advancements)
-    public static void setScreen(AdvancementFrameBlockTile tile, Player player) {
-        if(player instanceof LocalPlayer lp) {
-            Minecraft minecraft = Minecraft.getInstance();
-            Screen screen = new AdvancementSelectScreen(tile, lp.connection.getAdvancements());
-
-            ForgeHooksClient.clearGuiLayers(minecraft);
-            Screen old = minecraft.screen;
-
-            if (old != null) {
-                old.removed();
-            }
-
-            minecraft.screen = screen;
-            BufferUploader.reset();
-            minecraft.mouseHandler.releaseMouse();
-            KeyMapping.releaseAll();
-            screen.init(minecraft, minecraft.getWindow().getGuiScaledWidth(), minecraft.getWindow().getGuiScaledHeight());
-            minecraft.noRender = false;
-
-            minecraft.updateTitle();
-        }
-    }
 
     @Nullable
     @Override

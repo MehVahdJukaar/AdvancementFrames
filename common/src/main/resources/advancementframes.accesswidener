@@ -1,1 +1,7 @@
 accessWidener   v2  named
+accessible field net/minecraft/client/gui/screens/advancements/AdvancementTab scrollX D
+accessible field net/minecraft/client/gui/screens/advancements/AdvancementTab scrollY D
+accessible field net/minecraft/client/gui/screens/advancements/AdvancementTab widgets Ljava/util/Map;
+accessible field net/minecraft/client/gui/screens/advancements/AdvancementsScreen selectedTab Lnet/minecraft/client/gui/screens/advancements/AdvancementTab;
+accessible field net/minecraft/client/gui/screens/advancements/AdvancementWidget advancement Lnet/minecraft/advancements/Advancement;
+accessible field net/minecraft/client/gui/screens/advancements/AdvancementWidget progress Lnet/minecraft/advancements/AdvancementProgress;
