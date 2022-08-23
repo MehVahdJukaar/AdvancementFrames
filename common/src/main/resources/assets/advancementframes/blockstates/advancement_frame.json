@@ -1,0 +1,29 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "advancementframes:block/frame"
+    },
+    "facing=east": {
+      "model": "advancementframes:block/frame",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "advancementframes:block/frame",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "advancementframes:block/frame",
+      "y": 270
+    },
+    "facing=up": {
+      "model": "advancementframes:block/frame",
+      "x": 270,
+	  "y": 180
+    },
+    "facing=down": {
+      "model": "advancementframes:block/frame",
+      "x": 90,
+	  "y": 180
+    }
+  }
+}

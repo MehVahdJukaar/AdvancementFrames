@@ -1,0 +1,32 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "minecraft:block/cube_all",
+	"ambientocclusion": false,
+	"textures": {
+		"1": "advancementframes:block/default",
+		"2": "advancementframes:block/default",
+		"particle": "advancementframes:block/default"
+	},
+	"elements": [
+		{
+			"from": [1, 1, 15],
+			"to": [15, 15, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 13]},
+			"faces": {
+				"north": {"uv": [1, 1, 15, 15], "texture": "#1"},
+				"east": {"uv": [1, 1, 2, 15], "texture": "#1"},
+				"south": {"uv": [1, 15, 15, 1], "rotation": 180, "texture": "#2", "cullface": "south"},
+				"west": {"uv": [14, 1, 15, 15], "texture": "#1"},
+				"up": {"uv": [1, 1, 15, 2], "texture": "#1"},
+				"down": {"uv": [1, 14, 15, 15], "rotation": 180, "texture": "#1"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "group",
+			"origin": [10, 8, 10],
+			"children": [0]
+		}
+	]
+}

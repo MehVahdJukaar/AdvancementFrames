@@ -1,0 +1,52 @@
+
+modLoader="javafml" #mandatory
+
+loaderVersion="[40,)" #mandatory This is typically bumped every Minecraft version by Forge. See our download page for lists of versions.
+
+license="All rights reserved"
+
+[[mods]] #mandatory
+
+modId="advancementframes" #mandatory
+
+version="${file.jarVersion}" #mandatory
+
+displayName="Advancement Frames" #mandatory
+
+logoFile="icon.png" #optional
+
+credits="MehVahdJukaar, Plantkillable" #optional
+
+authors="MehVahdJukaar" #optional
+
+itemIcon="advancementframes:advancement_frame" #catalogue icon
+description='''
+Display your hard earner Advancements with fashion!
+'''
+
+[[dependencies.advancementframes]] #optional
+    # the modid of the dependency
+    modId="forge" #mandatory
+
+    mandatory=true #mandatory
+
+    versionRange="[40,)" #mandatory
+
+    ordering="NONE"
+    side="BOTH"
+# Here's another dependency
+[[dependencies.advancementframes]]
+    modId="minecraft"
+    mandatory=true
+# This version range declares a minimum of the current minecraft version up to but not including the next major version
+    versionRange="[1.19.2,1.20)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.advancementframes]]
+
+    modId="moonlight"
+    mandatory=true
+    versionRange="[1.19.2-2.0.16,]"
+    ordering="AFTER"
+    side="BOTH"

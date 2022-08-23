@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "000",
+    "010",
+    "000"
+  ],
+  "key": {
+    "0": {
+      "item": "minecraft:stick"
+    },
+    "1": {
+      "item": "minecraft:emerald"
+    }
+  },
+  "result": {
+    "item": "advancementframes:advancement_frame",
+    "count": 1
+  }
+}

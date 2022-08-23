@@ -1,0 +1,104 @@
+{
+  "variants": {
+    "facing=north,type=empty": {
+      "model": "advancementframes:block/frame_default"
+    },
+    "facing=east,type=empty": {
+      "model": "advancementframes:block/frame_default",
+      "y": 90
+    },
+    "facing=south,type=empty": {
+      "model": "advancementframes:block/frame_default",
+      "y": 180
+    },
+    "facing=west,type=empty": {
+      "model": "advancementframes:block/frame_default",
+      "y": 270
+    },
+    "facing=up,type=empty": {
+      "model": "advancementframes:block/frame_default",
+      "x": 270,
+	  "y": 180
+    },
+    "facing=down,type=empty": {
+      "model": "advancementframes:block/frame_default",
+      "x": 90,
+	  "y": 180
+    },
+	    "facing=north,type=task": {
+      "model": "advancementframes:block/frame_task"
+    },
+    "facing=east,type=task": {
+      "model": "advancementframes:block/frame_task",
+      "y": 90
+    },
+    "facing=south,type=task": {
+      "model": "advancementframes:block/frame_task",
+      "y": 180
+    },
+    "facing=west,type=task": {
+      "model": "advancementframes:block/frame_task",
+      "y": 270
+    },
+    "facing=down,type=task": {
+      "model": "advancementframes:block/frame_task",
+      "x": 90,
+	  "y": 180
+    },
+    "facing=up,type=task": {
+      "model": "advancementframes:block/frame_task",
+      "x": 270,
+	  "y": 180
+    },
+	    "facing=north,type=goal": {
+      "model": "advancementframes:block/frame_goal"
+    },
+    "facing=east,type=goal": {
+      "model": "advancementframes:block/frame_goal",
+      "y": 90
+    },
+    "facing=south,type=goal": {
+      "model": "advancementframes:block/frame_goal",
+      "y": 180
+    },
+    "facing=west,type=goal": {
+      "model": "advancementframes:block/frame_goal",
+      "y": 270
+    },
+    "facing=up,type=goal": {
+      "model": "advancementframes:block/frame_goal",
+      "x": 270,
+	  "y": 180
+    },
+    "facing=down,type=goal": {
+      "model": "advancementframes:block/frame_goal",
+      "x": 90,
+	  "y": 180
+    },
+	    "facing=north,type=challenge": {
+      "model": "advancementframes:block/frame_challenge"
+    },
+    "facing=east,type=challenge": {
+      "model": "advancementframes:block/frame_challenge",
+      "y": 90
+    },
+    "facing=south,type=challenge": {
+      "model": "advancementframes:block/frame_challenge",
+      "y": 180
+    },
+    "facing=west,type=challenge": {
+      "model": "advancementframes:block/frame_challenge",
+      "y": 270
+    },
+    "facing=up,type=challenge": {
+      "model": "advancementframes:block/frame_challenge",
+      "x": 270,
+	  "y": 180
+    },
+    "facing=down,type=challenge": {
+      "model": "advancementframes:block/frame_challenge",
+      "x": 90,
+	  "y": 180
+    }
+  }
+}
