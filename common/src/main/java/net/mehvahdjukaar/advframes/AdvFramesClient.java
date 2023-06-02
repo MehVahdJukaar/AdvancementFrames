@@ -5,7 +5,7 @@ import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.advframes.blocks.AdvancementFrameBlockTile;
 import net.mehvahdjukaar.advframes.client.AdvancementFrameBlockTileRenderer;
 import net.mehvahdjukaar.advframes.client.AdvancementSelectScreen;
-import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -19,16 +19,16 @@ public class AdvFramesClient {
     public static final ResourceLocation CHALLENGE_MODEL = AdvFrames.res("item/challenge");
 
     public static void init(){
-        ClientPlatformHelper.addSpecialModelRegistration(AdvFramesClient::registerSpecialModels);
-        ClientPlatformHelper.addBlockEntityRenderersRegistration(AdvFramesClient::registerBlockEntityRenderers);
+        ClientHelper.addSpecialModelRegistration(AdvFramesClient::registerSpecialModels);
+        ClientHelper.addBlockEntityRenderersRegistration(AdvFramesClient::registerBlockEntityRenderers);
     }
 
-    private static void registerBlockEntityRenderers(ClientPlatformHelper.BlockEntityRendererEvent event) {
+    private static void registerBlockEntityRenderers(ClientHelper.BlockEntityRendererEvent event) {
         event.register(AdvFrames.ADVANCEMENT_FRAME_TILE.get(), AdvancementFrameBlockTileRenderer::new);
     }
 
 
-    private static void registerSpecialModels(ClientPlatformHelper.SpecialModelEvent event) {
+    private static void registerSpecialModels(ClientHelper.SpecialModelEvent event) {
         event.register(TASK_MODEL);
         event.register(GOAL_MODEL);
         event.register(CHALLENGE_MODEL);

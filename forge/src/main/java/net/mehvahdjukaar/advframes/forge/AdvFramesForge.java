@@ -2,7 +2,7 @@ package net.mehvahdjukaar.advframes.forge;
 
 import net.mehvahdjukaar.advframes.AdvFrames;
 import net.mehvahdjukaar.advframes.AdvFramesClient;
-import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -18,7 +18,7 @@ public class AdvFramesForge {
 
         MinecraftForge.EVENT_BUS.addListener(AdvFramesForge::serverStarting);
 
-        if (PlatformHelper.getEnv().isClient()) {
+        if (PlatHelper.getPhysicalSide().isClient()) {
             AdvFramesClient.init();
         }
     }
