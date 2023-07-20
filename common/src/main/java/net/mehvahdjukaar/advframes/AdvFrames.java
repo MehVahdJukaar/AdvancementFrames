@@ -13,11 +13,11 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.material.MapColor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -38,7 +38,8 @@ public class AdvFrames {
     public static final ResourceLocation ADVANCEMENT_FRAME_NAME = AdvFrames.res("advancement_frame");
     public static final Supplier<Block> ADVANCEMENT_FRAME = RegHelper.registerBlock(ADVANCEMENT_FRAME_NAME,
             () -> new AdvancementFrameBlock(
-                    BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.WOOD)
+                    BlockBehaviour.Properties.copy(Blocks.OAK_WOOD)
+                            .mapColor(MapColor.NONE)
                             .sound(SoundType.WOOD)
                             .strength(0.25f, 0.25f)
                             .noCollission()));

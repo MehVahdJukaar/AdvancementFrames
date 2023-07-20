@@ -49,7 +49,7 @@ public class AdvancementFrameBlock extends Block implements EntityBlock, SimpleW
 
     @Override
     public boolean canSurvive(BlockState state, LevelReader worldIn, BlockPos pos) {
-        return worldIn.getBlockState(pos.relative(state.getValue(FACING).getOpposite())).getMaterial().isSolid();
+        return worldIn.getBlockState(pos.relative(state.getValue(FACING).getOpposite())).isSolid();
     }
 
     @Override
@@ -70,7 +70,7 @@ public class AdvancementFrameBlock extends Block implements EntityBlock, SimpleW
     }
 
     @Override
-    public boolean isPossibleToRespawnInThis() {
+    public boolean isPossibleToRespawnInThis(BlockState blockState) {
         return true;
     }
 

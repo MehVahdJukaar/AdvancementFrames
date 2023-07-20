@@ -35,7 +35,7 @@ public class ServerBoundSetAdvancementFramePacket implements Message {
     @Override
     public void handle(ChannelHandler.Context context) {
         if (context.getSender() instanceof ServerPlayer serverPlayer) {
-            ServerLevel level = (ServerLevel) serverPlayer.level;
+            ServerLevel level = (ServerLevel) serverPlayer.level();
             BlockPos pos = this.pos;
             BlockEntity tile = level.getBlockEntity(pos);
             if (tile instanceof AdvancementFrameBlockTile te) {

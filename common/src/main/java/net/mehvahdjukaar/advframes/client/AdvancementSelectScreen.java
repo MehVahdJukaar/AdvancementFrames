@@ -1,17 +1,15 @@
 package net.mehvahdjukaar.advframes.client;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.advframes.blocks.AdvancementFrameBlockTile;
 import net.mehvahdjukaar.advframes.network.NetworkHandler;
 import net.mehvahdjukaar.advframes.network.ServerBoundSetAdvancementFramePacket;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.advancements.AdvancementTab;
 import net.minecraft.client.gui.screens.advancements.AdvancementWidget;
 import net.minecraft.client.gui.screens.advancements.AdvancementsScreen;
 import net.minecraft.client.multiplayer.ClientAdvancements;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -76,16 +74,12 @@ public class AdvancementSelectScreen extends AdvancementsScreen {
 
     private static final ResourceLocation WINDOW_LOCATION = new ResourceLocation("textures/gui/advancements/window.png");
 
-    public void renderWindow(PoseStack poseStack, int x, int y) {
-        super.renderWindow(poseStack, x, y);
+    public void renderWindow(GuiGraphics graphics, int x, int y) {
+        super.renderWindow(graphics, x, y);
 
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.enableBlend();
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, WINDOW_LOCATION);
-        this.blit(poseStack, x, y + 5, 0, 5, 252, 140);
+        graphics.blit(WINDOW_LOCATION, x, y + 5, 0, 5, 252, 140);
         Component c = Component.translatable("advancementframes.gui");
         float posX = this.width / 2f - this.font.width(c) / 2f;
-        this.font.draw(poseStack, c, posX, (float) (y + 6), 4210752);
+        graphics.drawString(this.font, c,(int) posX,  (y + 6), 4210752, false);
     }
 }
