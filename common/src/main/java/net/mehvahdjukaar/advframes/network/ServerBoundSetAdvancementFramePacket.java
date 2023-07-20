@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.advframes.network;
 
+import net.mehvahdjukaar.advframes.blocks.AdvancementFrameBlock;
 import net.mehvahdjukaar.advframes.blocks.AdvancementFrameBlockTile;
 import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
@@ -43,8 +44,8 @@ public class ServerBoundSetAdvancementFramePacket implements Message {
                 if (advancement != null) {
                     te.setAdvancement(advancement, serverPlayer);
                     //updates client
-                    BlockState state = level.getBlockState(pos);
-                    level.sendBlockUpdated(pos, state, state, 3);
+                    level.setBlockAndUpdate(pos, te.getBlockState().setValue(AdvancementFrameBlock.TYPE,
+                           AdvancementFrameBlock.Type.get(advancement.getDisplay())));
                     tile.setChanged();
                 }
             }

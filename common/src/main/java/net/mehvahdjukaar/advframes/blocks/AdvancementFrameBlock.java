@@ -3,10 +3,14 @@ package net.mehvahdjukaar.advframes.blocks;
 import com.mojang.authlib.GameProfile;
 import net.mehvahdjukaar.advframes.AdvFramesClient;
 import net.minecraft.ChatFormatting;
+import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.DisplayInfo;
+import net.minecraft.advancements.FrameType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -22,6 +26,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathComputationType;
@@ -29,6 +34,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Locale;
 
 public class AdvancementFrameBlock extends Block implements EntityBlock, SimpleWaterloggedBlock {
     protected static final VoxelShape SHAPE_DOWN = Block.box(1, 15, 1, 15, 16, 15);
@@ -40,11 +47,12 @@ public class AdvancementFrameBlock extends Block implements EntityBlock, SimpleW
 
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+    public static final EnumProperty<Type> TYPE = EnumProperty.create("frame_type", Type.class);
 
     public AdvancementFrameBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH)
-                .setValue(WATERLOGGED, false));
+                .setValue(WATERLOGGED, false).setValue(TYPE, Type.NONE));
     }
 
     @Override
@@ -76,7 +84,7 @@ public class AdvancementFrameBlock extends Block implements EntityBlock, SimpleW
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING, WATERLOGGED);
+        builder.add(FACING, WATERLOGGED, TYPE);
     }
 
     @Override
@@ -131,7 +139,6 @@ public class AdvancementFrameBlock extends Block implements EntityBlock, SimpleW
                     }
                 }
             }
-            ;
         }
         return InteractionResult.sidedSuccess(level.isClientSide);
     }
@@ -141,6 +148,32 @@ public class AdvancementFrameBlock extends Block implements EntityBlock, SimpleW
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new AdvancementFrameBlockTile(pos, state);
+    }
+
+    public enum Type implements StringRepresentable {
+        TASK,
+        CHALLENGE,
+        GOAL,
+        NONE;
+
+        @Override
+        public String getSerializedName() {
+            return this.name().toLowerCase(Locale.ROOT);
+        }
+
+        public static Type get(DisplayInfo type){
+            return values()[type.getFrame().ordinal()];
+        }
+
+        @Nullable
+        public ResourceLocation getModel() {
+            return switch (this) {
+                case GOAL -> AdvFramesClient.GOAL_MODEL;
+                case TASK -> AdvFramesClient.TASK_MODEL;
+                case CHALLENGE -> AdvFramesClient.CHALLENGE_MODEL;
+                case NONE -> null;
+            };
+        }
     }
 
 }

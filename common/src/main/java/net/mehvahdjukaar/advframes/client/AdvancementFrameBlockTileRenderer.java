@@ -3,35 +3,28 @@ package net.mehvahdjukaar.advframes.client;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.advframes.AdvFrames;
-import net.mehvahdjukaar.advframes.AdvFramesClient;
 import net.mehvahdjukaar.advframes.blocks.AdvancementFrameBlock;
 import net.mehvahdjukaar.advframes.blocks.AdvancementFrameBlockTile;
 import net.mehvahdjukaar.moonlight.api.client.texture_renderer.FrameBufferBackedDynamicTexture;
 import net.mehvahdjukaar.moonlight.api.client.texture_renderer.RenderedTexturesManager;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
-import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
+import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
 import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.HitResult;
-import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
 
 import java.util.Objects;
 
@@ -49,41 +42,23 @@ public class AdvancementFrameBlockTileRenderer<T extends AdvancementFrameBlockTi
         this.font = minecraft.font;
     }
 
-    @Override
-    public boolean shouldRender(T t, Vec3 vec3) {
-        return BlockEntityRenderer.super.shouldRender(t, vec3);
-    }
 
     @Override
     public void render(T tile, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int light, int overlay) {
 
         DisplayInfo advancement = tile.getAdvancement();
         if (advancement != null) {
+
             poseStack.pushPose();
             poseStack.translate(0.5, 0.5, 0.5);
 
-            poseStack.mulPose(tile.getBlockState().getValue(AdvancementFrameBlock.FACING).getRotation());
-            poseStack.mulPose(RotHlpr.XN90);
-            poseStack.translate(0, 0, -7 / 16f + 0.01);
+            poseStack.mulPose(RotHlpr.rot(tile.getBlockState().getValue(AdvancementFrameBlock.FACING).getOpposite()));
+            double z = -7 / 16f + 0.01;
+            poseStack.translate(0, 0, z);
 
             poseStack.pushPose();
-
-            ResourceLocation r = switch (advancement.getFrame()) {
-                case GOAL -> AdvFramesClient.GOAL_MODEL;
-                case TASK -> AdvFramesClient.TASK_MODEL;
-                case CHALLENGE -> AdvFramesClient.CHALLENGE_MODEL;
-            };
-
-            poseStack.pushPose();
-            poseStack.translate(0, 0, -0.041f);
-            BakedModel frame = ClientHelper.getModel(itemRenderer.getItemModelShaper().getModelManager(), r);
-            itemRenderer.render(Items.DIAMOND.getDefaultInstance(),
-                    ItemDisplayContext.GUI, false, poseStack, buffer, light, overlay, frame);
-
-            poseStack.popPose();
 
             ItemStack stack = advancement.getIcon();
-
 
             ResourceLocation tex;
             //if it doesnt have fancy nbt we can use default optimized item renderer. useful since it can
@@ -93,27 +68,17 @@ public class AdvancementFrameBlockTileRenderer<T extends AdvancementFrameBlockTi
             } else {
                 //always renders animated cause its cooler
                 int i = Objects.hash(stack.getTag(), stack.getItem());
-                FrameBufferBackedDynamicTexture  tt = RenderedTexturesManager.requestFlatItemStackTexture(AdvFrames.res("" + i), stack, 64);
-                tt.download();
-                tt.getPixels().setPixelRGBA(2,2, 0xff00ffff);
-                tt.upload();
+                FrameBufferBackedDynamicTexture tt = RenderedTexturesManager.requestFlatItemStackTexture(AdvFrames.res("" + i), stack, 64);
                 tex = tt.getTextureLocation();
             }
 
             VertexConsumer vertexConsumer = buffer.getBuffer(RenderType.entityCutout(tex));
 
-            Matrix4f tr = poseStack.last().pose();
-            Matrix3f normal = poseStack.last().normal();
-
-            float z = 0f;
             float s = 0.25f;
-            //poseStack.translate(0.5, 0.5, 0);
-            vertexConsumer.vertex(tr, -s, s, z).color(1f, 1f, 1f, 1f).uv(0f, 1f).overlayCoords(overlay).uv2(light).normal(normal, 0f, 0f, 1f).endVertex();
-            vertexConsumer.vertex(tr, -s, -s, z).color(1f, 1f, 1f, 1f).uv(0f, 0f).overlayCoords(overlay).uv2(light).normal(normal, 0f, 0f, 1f).endVertex();
-
-            vertexConsumer.vertex(tr, s, -s, z).color(1f, 1f, 1f, 1f).uv(1f, 0f).overlayCoords(overlay).uv2(light).normal(normal, 0f, 0f, 1f).endVertex();
-            vertexConsumer.vertex(tr, s, s, z).color(1f, 1f, 1f, 1f).uv(1f, 1f).overlayCoords(overlay).uv2(light).normal(normal, 0f, 0f, 1f).endVertex();
-
+            int lu = light & '\uffff';
+            int lv = light >> 16 & '\uffff';
+            poseStack.scale(1,-1,-1);
+            VertexUtil.addQuad(vertexConsumer, poseStack, -s, -s, s, s, lu, lv);
 
             poseStack.popPose();
 
@@ -121,7 +86,7 @@ public class AdvancementFrameBlockTileRenderer<T extends AdvancementFrameBlockTi
                 HitResult hit = minecraft.hitResult;
                 if (hit != null && hit.getType() == HitResult.Type.BLOCK) {
                     BlockPos pos = tile.getBlockPos();
-                    BlockPos hitPos = BlockPos.containing (hit.getLocation());
+                    BlockPos hitPos = BlockPos.containing(hit.getLocation());
                     if (pos.equals(hitPos)) {
                         double d0 = entityRenderer.distanceToSqr(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
                         if (d0 < 16 * 16) {

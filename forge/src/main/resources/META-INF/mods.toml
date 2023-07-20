@@ -47,6 +47,6 @@ Display your hard earner Advancements with fashion!
 
     modId="moonlight"
     mandatory=true
-    versionRange="[1.20-2.5.0,]"
+    versionRange="[1.20-2.7.0,]"
     ordering="NONE"
     side="BOTH"

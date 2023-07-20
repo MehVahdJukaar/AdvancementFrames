@@ -1,9 +1,0 @@
-{
-	"credit": "Made with Blockbench",
-	"ambientocclusion": false,
-	"parent": "advancementframes:block/frame_default",
-	"textures": {
-		"1": "advancementframes:block/task",
-		"particle": "advancementframes:block/task"
-	}
-}

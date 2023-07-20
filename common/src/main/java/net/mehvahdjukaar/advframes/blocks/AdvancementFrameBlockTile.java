@@ -104,6 +104,14 @@ public class AdvancementFrameBlockTile extends BlockEntity {
             FrameType type = FrameType.values()[tag.getInt("FrameType")];
             this.advancement = new DisplayInfo(icon, title, description, null, type, false, true, true);
         }
+        //remove
+        if (level != null) {
+            var t = AdvancementFrameBlock.Type.get(advancement);
+            if (getBlockState().getValue(AdvancementFrameBlock.TYPE) != t) {
+                level.setBlockAndUpdate(worldPosition, getBlockState().setValue(AdvancementFrameBlock.TYPE, t));
+            }
+        }
+
     }
 
     public ChatFormatting getColor() {

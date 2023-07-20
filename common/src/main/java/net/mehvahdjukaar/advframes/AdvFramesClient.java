@@ -4,12 +4,15 @@ import com.mojang.blaze3d.vertex.BufferUploader;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.advframes.blocks.AdvancementFrameBlockTile;
 import net.mehvahdjukaar.advframes.client.AdvancementFrameBlockTileRenderer;
+import net.mehvahdjukaar.advframes.client.AdvancementFrameModel;
 import net.mehvahdjukaar.advframes.client.AdvancementSelectScreen;
+import net.mehvahdjukaar.moonlight.api.client.model.NestedModelLoader;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 
@@ -21,6 +24,13 @@ public class AdvFramesClient {
     public static void init(){
         ClientHelper.addSpecialModelRegistration(AdvFramesClient::registerSpecialModels);
         ClientHelper.addBlockEntityRenderersRegistration(AdvFramesClient::registerBlockEntityRenderers);
+        ClientHelper.addModelLoaderRegistration(AdvFramesClient::registerModelLoaders);
+
+        ClientHelper.addClientSetup(()->ClientHelper.registerRenderType(AdvFrames.ADVANCEMENT_FRAME.get(), RenderType.cutout()));
+    }
+
+    private static void registerModelLoaders(ClientHelper.ModelLoaderEvent event) {
+        event.register(AdvFrames.res("advancement_frame"), new NestedModelLoader("frame", AdvancementFrameModel::new));
     }
 
     private static void registerBlockEntityRenderers(ClientHelper.BlockEntityRendererEvent event) {
@@ -61,6 +71,7 @@ public class AdvFramesClient {
 
     @ExpectPlatform
     private static void clearForgeGuiLayers(Minecraft minecraft) {
+        throw new AssertionError();
     }
 
 
