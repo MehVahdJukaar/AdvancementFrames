@@ -8,6 +8,7 @@ import net.mehvahdjukaar.advframes.client.AdvancementFrameModel;
 import net.mehvahdjukaar.advframes.client.AdvancementSelectScreen;
 import net.mehvahdjukaar.moonlight.api.client.model.NestedModelLoader;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
+import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -15,6 +16,11 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.Item;
+
+import java.util.Arrays;
+import java.util.function.Supplier;
 
 public class AdvFramesClient {
     public static final ResourceLocation TASK_MODEL = AdvFrames.res("item/task");
@@ -25,7 +31,20 @@ public class AdvFramesClient {
         ClientHelper.addSpecialModelRegistration(AdvFramesClient::registerSpecialModels);
         ClientHelper.addBlockEntityRenderersRegistration(AdvFramesClient::registerBlockEntityRenderers);
         ClientHelper.addModelLoaderRegistration(AdvFramesClient::registerModelLoaders);
-
+        RegHelper.ItemToTabEvent e;
+        try {
+            Arrays.stream(AdvFramesClient.class.getFields())
+                    .filter(f -> f.getType() == Supplier.class)
+                    .filter(m -> m.getAnnotationsByType(DisabledItem.class).length == 0)
+                    .map(f -> {
+                        try {
+                            return( (Supplier<?>) f.get(null)).get();
+                        } catch (IllegalAccessException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    }).filter(f->f instanceof Item)
+                    .forEach(f -> e.add(CreativeModeTabs.FUNCTIONAL_BLOCKS, f.get(null)));
+        }catch (Exception ee){};
         ClientHelper.addClientSetup(()->ClientHelper.registerRenderType(AdvFrames.ADVANCEMENT_FRAME.get(), RenderType.cutout()));
     }
 

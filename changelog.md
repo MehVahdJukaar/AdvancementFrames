@@ -1,1 +1,1 @@
-1.20
+- optimized frame rendering to use baked models

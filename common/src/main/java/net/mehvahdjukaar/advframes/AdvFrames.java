@@ -7,6 +7,8 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
@@ -28,7 +30,7 @@ import java.util.function.Supplier;
  */
 public class AdvFrames {
     public static final String MOD_ID = "advancementframes";
-
+//TODO: stat frame block
     public static ResourceLocation res(String name) {
         return new ResourceLocation(MOD_ID, name);
     }
