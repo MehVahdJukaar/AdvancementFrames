@@ -3,12 +3,10 @@ package net.mehvahdjukaar.advframes;
 import com.mojang.blaze3d.vertex.BufferUploader;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.advframes.blocks.AdvancementFrameBlockTile;
-import net.mehvahdjukaar.advframes.client.AdvancementFrameBlockTileRenderer;
-import net.mehvahdjukaar.advframes.client.AdvancementFrameModel;
-import net.mehvahdjukaar.advframes.client.AdvancementSelectScreen;
+import net.mehvahdjukaar.advframes.blocks.StatFrameBlockTile;
+import net.mehvahdjukaar.advframes.client.*;
 import net.mehvahdjukaar.moonlight.api.client.model.NestedModelLoader;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
-import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -16,36 +14,19 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraft.world.item.Item;
-
-import java.util.Arrays;
-import java.util.function.Supplier;
 
 public class AdvFramesClient {
     public static final ResourceLocation TASK_MODEL = AdvFrames.res("item/task");
     public static final ResourceLocation GOAL_MODEL = AdvFrames.res("item/goal");
     public static final ResourceLocation CHALLENGE_MODEL = AdvFrames.res("item/challenge");
 
-    public static void init(){
+    public static void init() {
+        ClientConfigs.init();
         ClientHelper.addSpecialModelRegistration(AdvFramesClient::registerSpecialModels);
         ClientHelper.addBlockEntityRenderersRegistration(AdvFramesClient::registerBlockEntityRenderers);
         ClientHelper.addModelLoaderRegistration(AdvFramesClient::registerModelLoaders);
-        RegHelper.ItemToTabEvent e;
-        try {
-            Arrays.stream(AdvFramesClient.class.getFields())
-                    .filter(f -> f.getType() == Supplier.class)
-                    .filter(m -> m.getAnnotationsByType(DisabledItem.class).length == 0)
-                    .map(f -> {
-                        try {
-                            return( (Supplier<?>) f.get(null)).get();
-                        } catch (IllegalAccessException ex) {
-                            throw new RuntimeException(ex);
-                        }
-                    }).filter(f->f instanceof Item)
-                    .forEach(f -> e.add(CreativeModeTabs.FUNCTIONAL_BLOCKS, f.get(null)));
-        }catch (Exception ee){};
-        ClientHelper.addClientSetup(()->ClientHelper.registerRenderType(AdvFrames.ADVANCEMENT_FRAME.get(), RenderType.cutout()));
+
+        ClientHelper.addClientSetup(() -> ClientHelper.registerRenderType(AdvFrames.ADVANCEMENT_FRAME.get(), RenderType.cutout()));
     }
 
     private static void registerModelLoaders(ClientHelper.ModelLoaderEvent event) {
@@ -54,6 +35,7 @@ public class AdvFramesClient {
 
     private static void registerBlockEntityRenderers(ClientHelper.BlockEntityRendererEvent event) {
         event.register(AdvFrames.ADVANCEMENT_FRAME_TILE.get(), AdvancementFrameBlockTileRenderer::new);
+        event.register(AdvFrames.STAT_FRAME_TILE.get(), StatFrameBlockTileRenderer::new);
     }
 
 
@@ -63,10 +45,16 @@ public class AdvFramesClient {
         event.register(CHALLENGE_MODEL);
     }
 
-
+    public static void setStatScreen(StatFrameBlockTile tile, Player player) {
+        if (player instanceof LocalPlayer lp) {
+            Minecraft minecraft = Minecraft.getInstance();
+            Screen screen = new StatSelectScreen(tile, lp.getStats());
+            minecraft.setScreen(screen);
+        }
+    }
     //not using set screen to avoid firing forge event since SOME mods like to override ANY screen that extends advancement screen (looking at you better advancements XD)
     public static void setAdvancementScreen(AdvancementFrameBlockTile tile, Player player) {
-        if(player instanceof LocalPlayer lp) {
+        if (player instanceof LocalPlayer lp) {
             Minecraft minecraft = Minecraft.getInstance();
             Screen screen = new AdvancementSelectScreen(tile, lp.connection.getAdvancements());
 

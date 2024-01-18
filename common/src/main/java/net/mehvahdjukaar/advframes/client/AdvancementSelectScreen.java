@@ -12,6 +12,7 @@ import net.minecraft.client.gui.screens.advancements.AdvancementsScreen;
 import net.minecraft.client.multiplayer.ClientAdvancements;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -20,10 +21,13 @@ import java.util.Objects;
 
 public class AdvancementSelectScreen extends AdvancementsScreen {
     private final AdvancementFrameBlockTile tile;
+    private final MutableComponent title2;
 
     public AdvancementSelectScreen(AdvancementFrameBlockTile tile, ClientAdvancements clientAdvancements) {
         super(clientAdvancements);
         this.tile = tile;
+        this.title2 = Component.translatable("advancementframes.gui.advancements");
+
     }
 
     //why is this here??
@@ -74,12 +78,10 @@ public class AdvancementSelectScreen extends AdvancementsScreen {
 
     private static final ResourceLocation WINDOW_LOCATION = new ResourceLocation("textures/gui/advancements/window.png");
 
+    @Override
     public void renderWindow(GuiGraphics graphics, int x, int y) {
         super.renderWindow(graphics, x, y);
-
         graphics.blit(WINDOW_LOCATION, x, y + 5, 0, 5, 252, 140);
-        Component c = Component.translatable("advancementframes.gui");
-        float posX = this.width / 2f - this.font.width(c) / 2f;
-        graphics.drawString(this.font, c,(int) posX,  (y + 6), 4210752, false);
+        graphics.drawCenteredString(this.font, title2, 0, (y + 6), 4210752);
     }
 }

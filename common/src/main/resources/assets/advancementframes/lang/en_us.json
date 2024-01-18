@@ -1,6 +1,8 @@
 {
-  "advancementframes.gui": "Select an Advancement to display",
+  "advancementframes.gui.advancements": "Select an Advancement to display",
+  "advancementframes.gui.statistics": "Select a Statistic to display",
   "advancementframes.message": "%1$s has made the advancement %2$s",
-  "block.advancementframes.advancement_frame": "Advancement Frame"
+  "block.advancementframes.advancement_frame": "Advancement Frame",
+  "block.advancementframes.stat_frame": "Stat Frame"
 
 }

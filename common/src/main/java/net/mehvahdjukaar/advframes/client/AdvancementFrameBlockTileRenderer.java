@@ -23,31 +23,39 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.HitResult;
-import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
 import java.util.Objects;
 
-public class AdvancementFrameBlockTileRenderer<T extends AdvancementFrameBlockTile> implements BlockEntityRenderer<T> {
+public class AdvancementFrameBlockTileRenderer extends BaseFrameTileRenderer<AdvancementFrameBlockTile> {
 
-    private final ItemRenderer itemRenderer;
-    private final EntityRenderDispatcher entityRenderer;
-    private final Font font;
-    private final Minecraft minecraft;
 
     public AdvancementFrameBlockTileRenderer(BlockEntityRendererProvider.Context context) {
-        this.minecraft = Minecraft.getInstance();
-        this.itemRenderer = minecraft.getItemRenderer();
-        this.entityRenderer = minecraft.getEntityRenderDispatcher();
-        this.font = minecraft.font;
+        super(context);
     }
 
-
     @Override
-    public void render(T tile, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int light, int overlay) {
+    public void render(AdvancementFrameBlockTile tile, float partialTicks, PoseStack poseStack,
+                       MultiBufferSource buffer, int light, int overlay) {
 
         DisplayInfo advancement = tile.getAdvancement();
         if (advancement != null) {
+
+            ItemStack stack = advancement.getIcon();
+
+            ResourceLocation tex;
+            //if it doesnt have fancy nbt we can use default optimized item renderer. useful since it can
+            if (!ClientConfigs.ANIMATED_ICONS.get() && ItemStack.isSameItemSameTags(stack.getItem().getDefaultInstance(), stack)) {
+                FrameBufferBackedDynamicTexture tt = RenderedTexturesManager.requestFlatItemTexture(stack.getItem(), 64);
+                tex = tt.getTextureLocation();
+                if (!tt.isInitialized()) return;
+            } else {
+                //always renders animated cause its cooler
+                int i = Objects.hash(stack.getTag(), stack.getItem());
+                FrameBufferBackedDynamicTexture tt = RenderedTexturesManager.requestFlatItemStackTexture(AdvFrames.res("" + i), stack, 64);
+                tex = tt.getTextureLocation();
+                if (!tt.isInitialized()) return;
+            }
 
             poseStack.pushPose();
             poseStack.translate(0.5, 0.5, 0.5);
@@ -58,97 +66,22 @@ public class AdvancementFrameBlockTileRenderer<T extends AdvancementFrameBlockTi
 
             poseStack.pushPose();
 
-            ItemStack stack = advancement.getIcon();
-
-            ResourceLocation tex;
-            //if it doesnt have fancy nbt we can use default optimized item renderer. useful since it can
-            ItemStack def = stack.getItem().getDefaultInstance();
-            if (false && ItemStack.isSameItemSameTags(def, stack)) {
-                tex = RenderedTexturesManager.requestFlatItemTexture(stack.getItem(), 64).getTextureLocation();
-            } else {
-                //always renders animated cause its cooler
-                int i = Objects.hash(stack.getTag(), stack.getItem());
-                FrameBufferBackedDynamicTexture tt = RenderedTexturesManager.requestFlatItemStackTexture(AdvFrames.res("" + i), stack, 64);
-                tex = tt.getTextureLocation();
-            }
-
             VertexConsumer vertexConsumer = buffer.getBuffer(RenderType.entityCutout(tex));
 
             float s = 0.25f;
             int lu = light & '\uffff';
             int lv = light >> 16 & '\uffff';
-            poseStack.scale(1,-1,-1);
+            poseStack.scale(1, -1, -1);
             VertexUtil.addQuad(vertexConsumer, poseStack, -s, -s, s, s, lu, lv);
 
             poseStack.popPose();
 
-            if (Minecraft.renderNames()) {
-                HitResult hit = minecraft.hitResult;
-                if (hit != null && hit.getType() == HitResult.Type.BLOCK) {
-                    BlockPos pos = tile.getBlockPos();
-                    BlockPos hitPos = BlockPos.containing(hit.getLocation());
-                    if (pos.equals(hitPos)) {
-                        double d0 = entityRenderer.distanceToSqr(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
-                        if (d0 < 16 * 16) {
-                            //poseStack.mulPose(entityRenderer.cameraOrientation());
-                            //float f1 = minecraft.options.getBackgroundOpacity(0.25F);
-                            int opacity = 0;// (int) (f1 * 255.0F) << 24;
 
-                            poseStack.pushPose();
-
-                            Component component = advancement.getTitle();
-
-                            float width = font.width(component);
-                            float scale = 0.025f;
-                            if (width > 48) {
-                                scale /= width / 48;
-                            }
-
-
-                            poseStack.translate(0, 0.375 + 4 * scale, 0.0125);
-                            poseStack.scale(scale, -scale, scale);
-                            Matrix4f matrix4f = poseStack.last().pose();
-
-                            float dx = -width / 2f;
-
-
-                            font.drawInBatch(component, dx, 0, tile.getColor().getColor(),
-                                    true, matrix4f, buffer, Font.DisplayMode.POLYGON_OFFSET, opacity, light);
-                            poseStack.popPose();
-
-                            String name = tile.getOwner().getName();
-
-                            if (name != null && !name.isEmpty()) {
-                                component = Component.literal(name);
-                                poseStack.pushPose();
-
-                                width = font.width(component);
-                                scale = 0.025f;
-                                if (width > 48) {
-                                    scale /= width / 48;
-                                }
-
-                                poseStack.translate(0, -0.375 + 4 * scale, 0.0125);
-                                poseStack.scale(scale, -scale, scale);
-                                matrix4f = poseStack.last().pose();
-
-                                dx = -width / 2;
-
-                                font.drawInBatch(component, dx, 0, -1, true, matrix4f, buffer,
-                                        Font.DisplayMode.POLYGON_OFFSET, opacity, light);
-                                poseStack.popPose();
-                            }
-                        }
-                    }
-                }
-            }
+            renderTopTextBottomText(tile, poseStack, buffer, light);
 
             poseStack.popPose();
         }
     }
 
-    @Override
-    public int getViewDistance() {
-        return 64;
-    }
+
 }

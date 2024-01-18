@@ -1,14 +1,11 @@
 package net.mehvahdjukaar.advframes;
 
-import net.mehvahdjukaar.advframes.blocks.AdvancementFrameBlock;
-import net.mehvahdjukaar.advframes.blocks.AdvancementFrameBlockTile;
+import net.mehvahdjukaar.advframes.blocks.*;
 import net.mehvahdjukaar.advframes.network.NetworkHandler;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
@@ -30,7 +27,7 @@ import java.util.function.Supplier;
  */
 public class AdvFrames {
     public static final String MOD_ID = "advancementframes";
-//TODO: stat frame block
+
     public static ResourceLocation res(String name) {
         return new ResourceLocation(MOD_ID, name);
     }
@@ -53,10 +50,21 @@ public class AdvFrames {
             ADVANCEMENT_FRAME_NAME, () -> PlatHelper.newBlockEntityType(
                     AdvancementFrameBlockTile::new, ADVANCEMENT_FRAME.get()));
 
+    public static final ResourceLocation STAT_FRAME_NAME = AdvFrames.res("stat_frame");
+    public static final Supplier<Block> STAT_FRAME = RegHelper.registerBlock(STAT_FRAME_NAME,
+            () -> new StatFrameBlock(BlockBehaviour.Properties.copy(ADVANCEMENT_FRAME.get())));
+
+    public static final Supplier<Item> ASTAT_FRAME_ITEM = RegHelper.registerItem(STAT_FRAME_NAME,
+            () -> new BlockItem(STAT_FRAME.get(), new Item.Properties()));
+
+    public static final Supplier<BlockEntityType<StatFrameBlockTile>> STAT_FRAME_TILE = RegHelper.registerBlockEntityType(
+            STAT_FRAME_NAME, () -> PlatHelper.newBlockEntityType(
+                    StatFrameBlockTile::new, ADVANCEMENT_FRAME.get()));
+
 
     //called on mod creation
     public static void commonInit() {
-        NetworkHandler.registerMessages();
+        NetworkHandler.init();
         RegHelper.addItemsToTabsRegistration(AdvFrames::addCreativeTabItems);
     }
 
@@ -66,6 +74,6 @@ public class AdvFrames {
 
 
     public static void onServerStarting(MinecraftServer server) {
-        AdvancementFrameBlockTile.setup(server.getProfileCache(), server.getSessionService(), server);
+        BaseFrameBlockTile.setup(server.getProfileCache(), server.getSessionService(), server);
     }
 }

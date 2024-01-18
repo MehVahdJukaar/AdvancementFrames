@@ -7,10 +7,13 @@ import net.mehvahdjukaar.moonlight.api.platform.network.NetworkDir;
 public class NetworkHandler {
     public static ChannelHandler CHANNEL;
 
-    public static void registerMessages() {
+    public static void init() {
         CHANNEL = ChannelHandler.createChannel(AdvFrames.res("network"));
 
         CHANNEL.register(NetworkDir.PLAY_TO_SERVER, ServerBoundSetAdvancementFramePacket.class,
                 ServerBoundSetAdvancementFramePacket::new);
+
+        CHANNEL.register(NetworkDir.PLAY_TO_SERVER, ServerBoundSetStatFramePacket.class,
+                ServerBoundSetStatFramePacket::new);
     }
 }

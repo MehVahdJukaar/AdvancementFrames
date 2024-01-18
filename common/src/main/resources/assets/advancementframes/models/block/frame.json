@@ -1,11 +1,11 @@
 {
 	"credit": "Made with Blockbench",
 	"parent": "minecraft:block/cube_all",
-	"ambientocclusion": false,
+	"ambientocclusion": true,
 	"textures": {
-		"1": "advancementframes:block/default",
+		"1": "advancementframes:block/frame_back",
 		"2": "advancementframes:block/frame",
-		"particle": "advancementframes:block/default"
+		"particle": "advancementframes:block/frame_back"
 	},
 	"elements": [
 		{
