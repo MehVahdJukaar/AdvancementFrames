@@ -63,7 +63,7 @@ public class StatSelectScreen extends Screen implements StatsUpdateListener {
     @Override
     protected void init() {
         this.isLoading = true;
-        this.minecraft.getConnection().send((new ServerboundClientCommandPacket(ServerboundClientCommandPacket.Action.REQUEST_STATS)));
+        this.minecraft.getConnection().send(new ServerboundClientCommandPacket(ServerboundClientCommandPacket.Action.REQUEST_STATS));
     }
 
     public void initLists() {
@@ -209,7 +209,7 @@ public class StatSelectScreen extends Screen implements StatsUpdateListener {
                 top += 1;
                 guiGraphics.drawString(font, this.statDisplay, left, top, index % 2 == 0 ? 16777215 : 9474192);
                 String string = this.getValueText();
-                guiGraphics.drawString(font, string, left + 213 - font.width(string), top, index % 2 == 0 ? 16777215 : 9474192);
+                guiGraphics.drawString(font, string, left + width - font.width(string), top, index % 2 == 0 ? 16777215 : 9474192);
                 if (isMouseOver) {
                     guiGraphics.fillGradient(RenderType.guiOverlay(),
                             left, top, left + width, top + height + 2, -2130706433, -2130706433, 0);
@@ -355,7 +355,7 @@ public class StatSelectScreen extends Screen implements StatsUpdateListener {
 
         @Override
         protected void renderDecorations(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-            if (mouseY >= this.y0 && mouseY <= this.y1) {
+            if (mouseY >= this.y0 && mouseY < this.y1) {
                 ItemStatisticsList.ItemRow itemRow = this.getHovered();
                 int k = (this.width - this.getRowWidth()) / 2;
                 Component component = null;
@@ -469,7 +469,7 @@ public class StatSelectScreen extends Screen implements StatsUpdateListener {
                 guiGraphics.drawString(font, string, x - font.width(string), y + 5, odd ? 16777215 : 9474192);
 
                 int w = 18;
-                if (isMouseOver && mouseX >= x - w && mouseX < x) {
+                if (stat != null && isMouseOver && mouseX >= x - w && mouseX < x) {
                     guiGraphics.fillGradient(RenderType.guiOverlay(),
                             x - w, y, x, y + w, -2130706433, -2130706433, 0);
                     hovered = stat;

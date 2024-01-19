@@ -5,8 +5,10 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.advframes.AdvFrames;
 import net.mehvahdjukaar.advframes.blocks.AdvancementFrameBlock;
 import net.mehvahdjukaar.advframes.blocks.AdvancementFrameBlockTile;
+import net.mehvahdjukaar.advframes.blocks.StatFrameBlock;
 import net.mehvahdjukaar.moonlight.api.client.texture_renderer.FrameBufferBackedDynamicTexture;
 import net.mehvahdjukaar.moonlight.api.client.texture_renderer.RenderedTexturesManager;
+import net.mehvahdjukaar.moonlight.api.client.util.LOD;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
 import net.minecraft.advancements.DisplayInfo;
@@ -19,16 +21,17 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
 
 import java.util.Objects;
 
 public class AdvancementFrameBlockTileRenderer extends BaseFrameTileRenderer<AdvancementFrameBlockTile> {
-
 
     public AdvancementFrameBlockTileRenderer(BlockEntityRendererProvider.Context context) {
         super(context);
@@ -40,6 +43,13 @@ public class AdvancementFrameBlockTileRenderer extends BaseFrameTileRenderer<Adv
 
         DisplayInfo advancement = tile.getAdvancement();
         if (advancement != null) {
+
+            Direction dir = tile.getBlockState().getValue(StatFrameBlock.FACING);
+            float yaw = -dir.toYRot();
+            Vec3 cameraPos = camera.getPosition();
+            BlockPos pos = tile.getBlockPos();
+           // if (LOD.isOutOfFocus(cameraPos, pos, yaw, 0, dir, 15/16f)) return;
+            LOD lod = new LOD(cameraPos, pos);
 
             ItemStack stack = advancement.getIcon();
 
@@ -77,7 +87,7 @@ public class AdvancementFrameBlockTileRenderer extends BaseFrameTileRenderer<Adv
             poseStack.popPose();
 
 
-            renderTopTextBottomText(tile, poseStack, buffer, light);
+            renderTopTextBottomText(lod, tile, poseStack, buffer, light, 0.375f);
 
             poseStack.popPose();
         }

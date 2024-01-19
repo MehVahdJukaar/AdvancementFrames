@@ -104,7 +104,9 @@ public abstract class BaseFrameBlockTile extends BlockEntity {
     @Nullable
     public Component getOwnerName() {
         if (owner != null) {
-            return Component.literal(owner.getName());
+            String name = owner.getName();
+            if (name == null) return null;
+            return Component.literal(name);
         }
         return null;
     }

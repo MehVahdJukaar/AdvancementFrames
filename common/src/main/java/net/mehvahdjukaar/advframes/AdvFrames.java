@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.advframes;
 
 import net.mehvahdjukaar.advframes.blocks.*;
+import net.mehvahdjukaar.advframes.integration.CreateCompat;
 import net.mehvahdjukaar.advframes.network.NetworkHandler;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
@@ -59,13 +60,18 @@ public class AdvFrames {
 
     public static final Supplier<BlockEntityType<StatFrameBlockTile>> STAT_FRAME_TILE = RegHelper.registerBlockEntityType(
             STAT_FRAME_NAME, () -> PlatHelper.newBlockEntityType(
-                    StatFrameBlockTile::new, ADVANCEMENT_FRAME.get()));
+                    StatFrameBlockTile::new, STAT_FRAME.get()));
 
 
     //called on mod creation
     public static void commonInit() {
         NetworkHandler.init();
         RegHelper.addItemsToTabsRegistration(AdvFrames::addCreativeTabItems);
+        PlatHelper.addCommonSetup(AdvFrames::commonSetup);
+    }
+
+    public static void commonSetup(){
+        if (PlatHelper.isModLoaded("create")) CreateCompat.setup();
     }
 
     private static void addCreativeTabItems(RegHelper.ItemToTabEvent event) {

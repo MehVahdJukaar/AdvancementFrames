@@ -95,12 +95,18 @@ public class AdvancementFrameBlockTile extends BaseFrameBlockTile {
 
     }
 
+    @Override
     public ChatFormatting getTitleColor() {
         var v = this.getAdvancement().getFrame();
         if (v == FrameType.GOAL) {
             return ChatFormatting.AQUA;
         }
         return v.getChatColor();
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return advancement != null;
     }
 
     public DisplayInfo getAdvancement() {

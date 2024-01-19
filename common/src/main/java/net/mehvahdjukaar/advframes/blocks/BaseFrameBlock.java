@@ -38,12 +38,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Locale;
 
 public abstract class BaseFrameBlock extends Block implements EntityBlock, SimpleWaterloggedBlock {
-    protected static final VoxelShape SHAPE_DOWN = Block.box(1, 15, 1, 15, 16, 15);
-    protected static final VoxelShape SHAPE_UP = Block.box(1, 0, 1, 15, 1, 15);
-    protected static final VoxelShape SHAPE_NORTH = Block.box(1, 1, 15, 15, 15, 16);
-    protected static final VoxelShape SHAPE_SOUTH = Block.box(1, 1, 0, 15, 15, 1);
-    protected static final VoxelShape SHAPE_EAST = Block.box(0, 1, 1, 1, 15, 15);
-    protected static final VoxelShape SHAPE_WEST = Block.box(15, 1, 1, 16, 15, 15);
 
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;

@@ -82,6 +82,7 @@ public class AdvancementSelectScreen extends AdvancementsScreen {
     public void renderWindow(GuiGraphics graphics, int x, int y) {
         super.renderWindow(graphics, x, y);
         graphics.blit(WINDOW_LOCATION, x, y + 5, 0, 5, 252, 140);
-        graphics.drawCenteredString(this.font, title2, 0, (y + 6), 4210752);
+        float posX = this.width / 2f - this.font.width(title2) / 2f;
+        graphics.drawString(this.font, title2, (int) posX, (y + 6), 4210752, false);
     }
 }

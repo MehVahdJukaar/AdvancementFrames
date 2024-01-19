@@ -6,6 +6,7 @@
   "client": [
   ],
   "mixins": [
+    "ServerStatCounterAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

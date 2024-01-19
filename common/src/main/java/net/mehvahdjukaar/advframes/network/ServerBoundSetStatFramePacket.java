@@ -49,6 +49,7 @@ public class ServerBoundSetStatFramePacket implements Message {
                    te.setStat(stat, statValue, serverPlayer);
                    //updates client
                    tile.setChanged();
+                   level.sendBlockUpdated(pos,tile.getBlockState(),tile.getBlockState(), 3);
                }
             }
         }
