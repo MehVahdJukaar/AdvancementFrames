@@ -6,10 +6,3 @@ accessible field net/minecraft/client/gui/screens/advancements/AdvancementsScree
 accessible field net/minecraft/client/gui/screens/advancements/AdvancementWidget advancement Lnet/minecraft/advancements/Advancement;
 accessible field net/minecraft/client/gui/screens/advancements/AdvancementWidget progress Lnet/minecraft/advancements/AdvancementProgress;
 
-
-
-accessible field net/minecraft/client/gui/screens/achievement/StatsScreen PENDING_TEXT Lnet/minecraft/network/chat/Component;
-accessible field net/minecraft/client/gui/screens/achievement/StatsScreen isLoading Z
-accessible field net/minecraft/client/gui/screens/achievement/StatsScreen statsList Lnet/minecraft/client/gui/screens/achievement/StatsScreen$GeneralStatisticsList;
-accessible field net/minecraft/client/gui/screens/achievement/StatsScreen itemStatsList Lnet/minecraft/client/gui/screens/achievement/StatsScreen$GeneralStatisticsList;
-accessible field net/minecraft/client/gui/screens/achievement/StatsScreen mobsStatsList Lnet/minecraft/client/gui/screens/achievement/StatsScreen$GeneralStatisticsList;

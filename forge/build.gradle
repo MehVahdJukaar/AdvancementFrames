@@ -103,6 +103,8 @@ dependencies {
 
     modImplementation("net.mehvahdjukaar:moonlight-forge:${project.moonlight_version}")
     modCompileOnly ("curse.maven:jei-238222:3884337")
+    modCompileOnly("com.tterrag.registrate:Registrate:MC1.20-1.3.3")
+
 
     modCompileOnly("curse.maven:create-328085:4835191")
     //modImplementation("curse.maven:configured-457570:3822820")

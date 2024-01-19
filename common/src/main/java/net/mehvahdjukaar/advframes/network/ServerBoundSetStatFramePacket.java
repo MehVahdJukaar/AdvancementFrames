@@ -47,6 +47,7 @@ public class ServerBoundSetStatFramePacket implements Message {
                var stat =  BuiltInRegistries.STAT_TYPE.get(statType);
                if(stat != null) {
                    te.setStat(stat, statValue, serverPlayer);
+                   te.updateStatValue();
                    //updates client
                    tile.setChanged();
                    level.sendBlockUpdated(pos,tile.getBlockState(),tile.getBlockState(), 3);

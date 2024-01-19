@@ -1,1 +1,1 @@
-- optimized frame rendering to use baked models
+Added stat frame block. Allows to display stats

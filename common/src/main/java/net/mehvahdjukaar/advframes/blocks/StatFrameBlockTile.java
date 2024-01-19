@@ -14,7 +14,6 @@ import net.minecraft.stats.Stat;
 import net.minecraft.stats.StatType;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.RedstoneLampBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nullable;
@@ -108,18 +107,23 @@ public class StatFrameBlockTile extends BaseFrameBlockTile {
 
     public static void tick(Level level, BlockPos pos, BlockState state, StatFrameBlockTile tile) {
         if ((level.getGameTime() + 1) % (15 * 20) == 0) {
-            var owner = tile.getOwner();
-            if (tile.stat != null && owner != null) {
-                var player = level.getPlayerByUUID(owner.getId());
-                if (player instanceof ServerPlayer serverPlayer) {
-                    var stats = serverPlayer.getStats();
-                    int newValue = stats.getValue(tile.stat);
-                    if(newValue != tile.value){
-                        tile.value = newValue;
-                        tile.setChanged();
-                        level.setBlockAndUpdate(pos, state.setValue(StatFrameBlock.TRIGGERED, true));
-                        level.scheduleTick(pos, state.getBlock(), 2);
-                    }
+            tile.updateStatValue();
+        }
+    }
+
+    public void updateStatValue() {
+        var owner = this.getOwner();
+        if (this.stat != null && owner != null) {
+            var player = level.getPlayerByUUID(owner.getId());
+            if (player instanceof ServerPlayer serverPlayer) {
+                var stats = serverPlayer.getStats();
+                int newValue = stats.getValue(this.stat);
+                if(newValue != this.value){
+                    this.value = newValue;
+                    this.setChanged();
+                    BlockState state = getBlockState();
+                    level.setBlockAndUpdate(worldPosition, state.setValue(StatFrameBlock.TRIGGERED, true));
+                    level.scheduleTick(worldPosition, state.getBlock(), 2);
                 }
             }
         }

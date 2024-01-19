@@ -21,7 +21,6 @@ public class CreateCompatImpl {
         DisplayBehaviour itemDisplaySource = AllDisplayBehaviours.register(
                 AdvFrames.res("stat_display_source"), new StatDisplaySource());
         AllDisplayBehaviours.assignBlockEntity(itemDisplaySource, AdvFrames.STAT_FRAME_TILE.get());
-
     }
 
     public static void setupClient() {
