@@ -1,7 +1,16 @@
-
 {
-  "advancementframes.gui": "表示する進捗を選択",
+  "advancementframes.gui.advancements": "表示する進捗を選択",
+  "advancementframes.gui.statistics": "表示する統計を選択",
   "advancementframes.message": "%1$sは%2$sを達成しました",
-  "block.advancementframes.advancement_frame": "進捗額縁"
-
+  "block.advancementframes.advancement_frame": "進捗額縁",
+  "block.advancementframes.stat_frame": "統計額縁",
+  "stat.advancementframes.used": "%sを使用した回数",
+  "stat.advancementframes.dropped": "%sを捨てた回数",
+  "stat.advancementframes.crafted": "%sをクラフトした回数",
+  "stat.advancementframes.mined": "%sを採取した回数",
+  "stat.advancementframes.broken": "%sを破壊した回数",
+  "stat.advancementframes.picked_up": "%sを拾った回数",
+  "stat.advancementframes.killed": "%sを倒した回数",
+  "stat.advancementframes.killed_by": "%sに倒された回数",
+  "advancementframes.display_source.stat": "統計値"
 }
