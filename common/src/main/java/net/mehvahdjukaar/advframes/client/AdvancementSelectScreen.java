@@ -81,7 +81,7 @@ public class AdvancementSelectScreen extends AdvancementsScreen {
     @Override
     public void renderWindow(GuiGraphics graphics, int x, int y) {
         super.renderWindow(graphics, x, y);
-        graphics.blit(WINDOW_LOCATION, x, y + 5, 0, 5, 252, 140);
+        graphics.blit(WINDOW_LOCATION, x, y + 5, 0, 5, 252, 11);
         float posX = this.width / 2f - this.font.width(title2) / 2f;
         graphics.drawString(this.font, title2, (int) posX, (y + 6), 4210752, false);
     }

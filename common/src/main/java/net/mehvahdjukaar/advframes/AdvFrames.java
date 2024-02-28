@@ -11,7 +11,6 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
@@ -70,12 +69,14 @@ public class AdvFrames {
         PlatHelper.addCommonSetup(AdvFrames::commonSetup);
     }
 
-    public static void commonSetup(){
+    public static void commonSetup() {
         if (PlatHelper.isModLoaded("create")) CreateCompat.setup();
+
     }
 
     private static void addCreativeTabItems(RegHelper.ItemToTabEvent event) {
-        event.addBefore(CreativeModeTabs.FUNCTIONAL_BLOCKS, i -> i.is(Items.ITEM_FRAME), (ItemLike) ADVANCEMENT_FRAME_ITEM.get());
+        event.addBefore(CreativeModeTabs.FUNCTIONAL_BLOCKS, i -> i.is(Items.ITEM_FRAME),
+                ADVANCEMENT_FRAME_ITEM.get(), ASTAT_FRAME_ITEM.get());
     }
 
 

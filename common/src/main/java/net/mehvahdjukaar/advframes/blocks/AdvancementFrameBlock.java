@@ -76,7 +76,8 @@ public class AdvancementFrameBlock extends BaseFrameBlock {
                             Component name = Component.literal(owner.getName()).withStyle(ChatFormatting.GOLD);
                             Component title = Component.literal(advancement.getTitle().getString())
                                     .withStyle(tile.getTitleColor());
-                            player.displayClientMessage(Component.translatable("advancementframes.message", name, title), true);
+                            player.displayClientMessage(Component.translatable(
+                                    "advancementframes.message.advancement", name, title), true);
                         }
                     }
                 }

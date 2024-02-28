@@ -106,7 +106,7 @@ public class StatFrameBlockTile extends BaseFrameBlockTile {
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, StatFrameBlockTile tile) {
-        if ((level.getGameTime() + 1) % (15 * 20) == 0) {
+        if ((level.getGameTime() + 1) % (5 * 20) == 0) {
             tile.updateStatValue();
         }
     }

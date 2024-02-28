@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.advframes.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.mehvahdjukaar.advframes.AdvFramesClient;
 import net.mehvahdjukaar.advframes.blocks.AdvancementFrameBlock;
 import net.mehvahdjukaar.advframes.blocks.StatFrameBlock;
 import net.mehvahdjukaar.advframes.blocks.StatFrameBlockTile;
@@ -14,17 +13,12 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.stats.Stat;
-import net.minecraft.stats.StatType;
 import net.minecraft.util.FormattedCharSequence;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -52,7 +46,7 @@ public class StatFrameBlockTileRenderer extends BaseFrameTileRenderer<StatFrameB
             Vec3 cameraPos = camera.getPosition();
             BlockPos pos = tile.getBlockPos();
             //TODO: Fix
-           // if (LOD.isOutOfFocus(cameraPos, pos, yaw, 0, dir, 15 / 16f)) return;
+            // if (LOD.isOutOfFocus(cameraPos, pos, yaw, 0, dir, 15 / 16f)) return;
             LOD lod = new LOD(cameraPos, pos);
 
             poseStack.pushPose();
@@ -64,7 +58,7 @@ public class StatFrameBlockTileRenderer extends BaseFrameTileRenderer<StatFrameB
             poseStack.translate(0, 0, z);
 
             poseStack.pushPose();
-            poseStack.translate(0, 11 / 16f, -1/32f+0.001);
+            poseStack.translate(0, 11 / 16f, -1 / 32f + 0.001);
             //maybe use texture renderer for this so we can use shading (not just block shade)
             var textProperties = computeRenderProperties(light, dir.step(), lod::isVeryNear);
 
@@ -94,7 +88,7 @@ public class StatFrameBlockTileRenderer extends BaseFrameTileRenderer<StatFrameB
             poseStack.popPose();
 
             poseStack.pushPose();
-            poseStack.translate(0, 9 / 16f, -1/32f+0.001);
+            poseStack.translate(0, 9 / 16f, -1 / 32f + 0.001);
             float valueScale = 1f / 64;
             poseStack.scale(valueScale, -valueScale, valueScale);
 
@@ -118,23 +112,8 @@ public class StatFrameBlockTileRenderer extends BaseFrameTileRenderer<StatFrameB
     private void updateAndCacheLines(StatFrameBlockTile tile, Stat<?> stat, TextUtil.RenderProperties textProperties) {
         float paperWidth = 1 - (2 * PAPER_X_MARGIN);
         float paperHeight = 1 - (2 * PAPER_Y_MARGIN);
-        Object value = stat.getValue();
-        StatType<?> type = stat.getType();
-        MutableComponent text;
-        ResourceLocation statId = BuiltInRegistries.STAT_TYPE.getKey(type);
-        if (value instanceof Item i) {
-            text = Component.translatable(
-                    "stat.advancementframes." + statId.getPath(), i.getDescription().getString());
 
-        } else if (value instanceof EntityType<?> e) {
-            text = Component.translatable(
-                    "stat.advancementframes." + statId.getPath(), e.getDescription().getString());
-        } else if (value instanceof ResourceLocation) {
-            String string = stat.getValue().toString();
-            text = Component.translatable("stat." + string.replace(':', '.'));
-        } else {
-            text = Component.literal("Unsupported Stat");
-        }
+        MutableComponent text = StatFrameBlock.getStatComponent(stat);
 
         text = text.setStyle(textProperties.style());
 
@@ -145,7 +124,7 @@ public class StatFrameBlockTileRenderer extends BaseFrameTileRenderer<StatFrameB
 
     public TextUtil.RenderProperties computeRenderProperties(int combinedLight, Vector3f normal, BooleanSupplier shouldShowGlow) {
         return TextUtil.renderProperties(DyeColor.BLACK, false,
-                1,
+                ClientConfigs.getSignColorMult(),
                 combinedLight,
                 Style.EMPTY,
                 normal, shouldShowGlow);

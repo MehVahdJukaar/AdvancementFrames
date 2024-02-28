@@ -1,1 +1,1 @@
-Added stat frame block. Allows to display stats
+added stat frame to creative inv

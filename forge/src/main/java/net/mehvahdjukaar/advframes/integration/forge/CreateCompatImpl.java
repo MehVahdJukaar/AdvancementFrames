@@ -62,9 +62,5 @@ public class CreateCompatImpl {
             return "stat";
         }
 
-        @Override
-        public int getPassiveRefreshTicks() {
-            return 20 * 10;
-        }
     }
 }

@@ -4,13 +4,23 @@ import com.mojang.authlib.GameProfile;
 import net.mehvahdjukaar.advframes.AdvFrames;
 import net.mehvahdjukaar.advframes.AdvFramesClient;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.minecraft.ChatFormatting;
+import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.stats.Stat;
+import net.minecraft.stats.StatType;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -24,6 +34,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class StatFrameBlock extends BaseFrameBlock {
@@ -84,16 +95,13 @@ public class StatFrameBlock extends BaseFrameBlock {
                 } else {
                     GameProfile owner = tile.getOwner();
                     if (owner != null && owner.getName() != null) {
-                        /*
-                        DisplayInfo advancement = tile.getStat();
-                        if (player.isSecondaryUseActive()) {
-                            player.displayClientMessage(advancement.getDescription(), true);
-                        } else {
-                            Component name = Component.literal(owner.getName()).withStyle(ChatFormatting.GOLD);
-                            Component title = Component.literal(advancement.getTitle().getString())
-                                    .withStyle(tile.getColor());
-                            player.displayClientMessage(Component.translatable("advancementframes.message", name, title), true);
-                        }*/
+
+                        Stat stat = tile.getStat();
+                        Component name = Component.literal(owner.getName()).withStyle(ChatFormatting.GOLD);
+                        Component title = getStatComponent(stat);
+                        Component number = Component.literal(stat.format(tile.getValue())).withStyle(ChatFormatting.DARK_RED);
+                        player.displayClientMessage(Component.translatable("advancementframes.message.stat",
+                                title, name, number), true);
                     }
                 }
             }
@@ -107,4 +115,27 @@ public class StatFrameBlock extends BaseFrameBlock {
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new StatFrameBlockTile(pos, state);
     }
+
+
+    public static MutableComponent getStatComponent(Stat<?> stat) {
+        StatType<?> type = stat.getType();
+        Object value = stat.getValue();
+        MutableComponent text;
+        ResourceLocation statId = BuiltInRegistries.STAT_TYPE.getKey(type);
+        if (value instanceof Item i) {
+            text = Component.translatable(
+                    "stat.advancementframes." + statId.getPath(), i.getDescription().getString());
+
+        } else if (value instanceof EntityType<?> e) {
+            text = Component.translatable(
+                    "stat.advancementframes." + statId.getPath(), e.getDescription().getString());
+        } else if (value instanceof ResourceLocation) {
+            String string = stat.getValue().toString();
+            text = Component.translatable("stat." + string.replace(':', '.'));
+        } else {
+            text = Component.literal("Unsupported Stat");
+        }
+        return text;
+    }
+
 }
