@@ -5,4 +5,4 @@ accessible field net/minecraft/client/gui/screens/advancements/AdvancementTab wi
 accessible field net/minecraft/client/gui/screens/advancements/AdvancementsScreen selectedTab Lnet/minecraft/client/gui/screens/advancements/AdvancementTab;
 accessible field net/minecraft/client/gui/screens/advancements/AdvancementWidget advancement Lnet/minecraft/advancements/Advancement;
 accessible field net/minecraft/client/gui/screens/advancements/AdvancementWidget progress Lnet/minecraft/advancements/AdvancementProgress;
-
+accessible field net/minecraft/stats/ServerStatsCounter dirty Ljava/util/Set;
