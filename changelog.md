@@ -1,1 +1,1 @@
-added stat frame to creative inv
+fixed bug with null advancement when placing a frame without setting one

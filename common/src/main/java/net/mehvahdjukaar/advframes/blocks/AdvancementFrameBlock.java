@@ -57,7 +57,7 @@ public class AdvancementFrameBlock extends BaseFrameBlock {
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
-        builder.add( TYPE);
+        builder.add(TYPE);
     }
 
     @Override
@@ -104,7 +104,8 @@ public class AdvancementFrameBlock extends BaseFrameBlock {
             return this.name().toLowerCase(Locale.ROOT);
         }
 
-        public static Type get(DisplayInfo type){
+        public static Type get(@Nullable DisplayInfo type) {
+            if (type == null) return NONE;
             return values()[type.getFrame().ordinal()];
         }
 

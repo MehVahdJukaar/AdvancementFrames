@@ -1,9 +1,9 @@
 package net.mehvahdjukaar.advframes.client;
 
 import net.mehvahdjukaar.advframes.blocks.AdvancementFrameBlock;
+import net.mehvahdjukaar.moonlight.api.client.model.BakedQuadsTransformer;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
-import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
@@ -19,7 +19,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.joml.Matrix4f;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class AdvancementFrameModel implements CustomBakedModel {
@@ -42,16 +41,13 @@ public class AdvancementFrameModel implements CustomBakedModel {
         Direction back = state.getValue(AdvancementFrameBlock.FACING).getOpposite();
         var model = state.getValue(AdvancementFrameBlock.TYPE).getModel();
         if (model != null) {
+            Matrix4f matrix = transform.getRotation().getMatrix();
+            matrix.rotateY((float) Math.PI);
+            matrix.translate(0, 0, -7.5f / 16f);
+            BakedQuadsTransformer transformer = BakedQuadsTransformer.create()
+                    .applyingTransform(matrix);
             BakedModel frame = ClientHelper.getModel(Minecraft.getInstance().getModelManager(), model);
-            for (var q : frame.getQuads(state, side, rand)) {
-                int[] v = Arrays.copyOf(q.getVertices(), q.getVertices().length);
-                Matrix4f matrix = transform.getRotation().getMatrix();
-                matrix.rotateY((float) Math.PI);
-                matrix.translate(0, 0, -7.5f / 16f);
-                VertexUtil.transformVertices(v, matrix);
-                Direction dir = Direction.rotate(matrix, q.getDirection());
-                if (dir != back) quads.add(new BakedQuad(v, q.getTintIndex(), dir, q.getSprite(), q.isShade()));
-            }
+            quads.addAll(transformer.transformAll(frame.getQuads(state, side, rand)));
         }
         return quads;
     }
