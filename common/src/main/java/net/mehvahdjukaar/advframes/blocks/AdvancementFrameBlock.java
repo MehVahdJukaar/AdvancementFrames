@@ -1,6 +1,8 @@
 package net.mehvahdjukaar.advframes.blocks;
 
 import com.mojang.authlib.GameProfile;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.mehvahdjukaar.advframes.AdvFramesClient;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.DisplayInfo;
@@ -113,6 +115,7 @@ public class AdvancementFrameBlock extends BaseFrameBlock {
             return values()[type.getType().ordinal()];
         }
 
+        @Environment(EnvType.CLIENT)
         @Nullable
         public ModelResourceLocation getModel() {
             return switch (this) {

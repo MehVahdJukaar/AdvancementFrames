@@ -38,7 +38,7 @@ subprojects {
 
     if (env.MODRINTH_TOKEN) {
         modrinth {
-            projectId = "advframes"
+            projectId = "advancement-frames"
             uploadFile = tasks.remapJar
             additionalFiles.add(tasks.remapSourcesJar)
             gameVersions = [minecraft_version]

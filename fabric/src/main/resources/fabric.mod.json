@@ -16,7 +16,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.mehvahdjukaar.sawmill.fabric.AdvFramesMod"
+      "net.mehvahdjukaar.advframes.fabric.AdvFramesFabric"
     ]
   },
   "mixins": [

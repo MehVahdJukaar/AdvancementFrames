@@ -14,7 +14,7 @@
     }
   },
   "result": {
-    "item": "advancementframes:advancement_frame",
+    "id": "advancementframes:advancement_frame",
     "count": 1
   }
 }

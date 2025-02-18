@@ -14,7 +14,7 @@
     }
   },
   "result": {
-    "item": "advancementframes:stat_frame",
+    "id": "advancementframes:stat_frame",
     "count": 1
   }
 }

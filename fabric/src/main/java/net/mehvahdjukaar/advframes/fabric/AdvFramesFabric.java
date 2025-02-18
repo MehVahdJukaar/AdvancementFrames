@@ -18,7 +18,5 @@ public class AdvFramesFabric implements ModInitializer {
         if (PlatHelper.getPhysicalSide().isClient()) {
             AdvFramesClient.init();
         }
-
-        ServerLifecycleEvents.SERVER_STARTING.register(AdvFrames::onServerStarting);
     }
 }
