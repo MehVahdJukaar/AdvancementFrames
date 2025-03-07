@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.advframes.integration.forge;
+package net.mehvahdjukaar.advframes.integration.neoforge;
 
 import com.simibubi.create.content.redstone.displayLink.AllDisplayBehaviours;
 import com.simibubi.create.content.redstone.displayLink.DisplayBehaviour;
@@ -10,21 +10,32 @@ import com.simibubi.create.foundation.ponder.PonderRegistry;
 import com.simibubi.create.foundation.utility.Components;
 import net.mehvahdjukaar.advframes.AdvFrames;
 import net.mehvahdjukaar.advframes.blocks.StatFrameBlockTile;
+import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+
+import java.util.List;
 
 import static com.simibubi.create.infrastructure.ponder.AllPonderTags.DISPLAY_TARGETS;
 
 public class CreateCompatImpl {
 
+    public static void init(){
+        RegHelper.register(
+                AdvFrames.res("stat_display_source"), () -> {
+                    var obj = new StatDisplaySource();
+                    DisplaySource.BY_BLOCK_ENTITY.register(AdvFrames.STAT_FRAME_TILE.get(), List.of(obj));
+                    return obj;
+                },
+                CreateRegistries.DISPLAY_SOURCE);
+    }
+
     public static void setup() {
-        DisplayBehaviour itemDisplaySource = AllDisplayBehaviours.register(
-                AdvFrames.res("stat_display_source"), new StatDisplaySource());
-        AllDisplayBehaviours.assignBlockEntity(itemDisplaySource, AdvFrames.STAT_FRAME_TILE.get());
     }
 
     public static void setupClient() {
-        PonderRegistry.TAGS.forTag(DISPLAY_TARGETS).add(AdvFrames.STAT_FRAME.get());
+        //TODO:
+        //PonderRegistry.TAGS.forTag(DISPLAY_TARGETS).add(AdvFrames.STAT_FRAME.get());
     }
 
     public static class StatDisplaySource extends SingleLineDisplaySource {

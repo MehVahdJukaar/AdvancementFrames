@@ -1,12 +1,14 @@
 package net.mehvahdjukaar.advframes;
 
-import net.mehvahdjukaar.advframes.blocks.*;
+import net.mehvahdjukaar.advframes.blocks.AdvancementFrameBlock;
+import net.mehvahdjukaar.advframes.blocks.AdvancementFrameBlockTile;
+import net.mehvahdjukaar.advframes.blocks.StatFrameBlock;
+import net.mehvahdjukaar.advframes.blocks.StatFrameBlockTile;
 import net.mehvahdjukaar.advframes.integration.CreateCompat;
 import net.mehvahdjukaar.advframes.network.NetworkHandler;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
@@ -67,6 +69,7 @@ public class AdvFrames {
         NetworkHandler.init();
         RegHelper.addItemsToTabsRegistration(AdvFrames::addCreativeTabItems);
         PlatHelper.addCommonSetup(AdvFrames::commonSetup);
+        if (PlatHelper.isModLoaded("create")) CreateCompat.init();
     }
 
     public static void commonSetup() {
