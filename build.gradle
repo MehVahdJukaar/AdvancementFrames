@@ -26,10 +26,11 @@ subprojects {
         minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
         mappings loom.layered() {
 
-            it.parchment("org.parchmentmc.data:parchment-${rootProject.parchment_version}")
             it.officialMojangMappings {
                 setNameSyntheticMembers(false)
             }
+            it.parchment("org.parchmentmc.data:parchment-${rootProject.parchment_version}")
+
         }
     }
 
@@ -102,6 +103,8 @@ allprojects {
             dirs 'mods'
         }
 
+        mavenCentral()
+
         mavenLocal()
 
         maven { url "https://maven.parchmentmc.org" }
@@ -128,10 +131,30 @@ allprojects {
             url = 'https://maven.neoforged.net'
         }
 
+        maven { // Reach Entity Attributes
+            url = "https://maven.jamieswhiteshirt.com/libs-release"
+            content { includeGroup("com.jamieswhiteshirt") }
+        }
+        maven { url = "https://maven.tterrag.com/" } // Flywheel
+        maven { url = "https://mvn.devos.one/snapshots/" } // Registrate, Porting Lib, Forge Tags, Milk Lib
+        maven { url = "https://mvn.devos.one/releases/" }
+
         maven {
             url = "https://api.modrinth.com/maven"
         }
+
+        maven {
+            url = "https://maven.blamejared.com/"
+        }
+        maven{
+            url = "https://mvn.devos.one/snapshots/"
+        }
+        maven { url = "https://mvn.devos.one/snapshots" }
+        maven { url = "https://maven.createmod.net" } // Ponder, Flywheel
+
+        maven { url "https://maven.misterpemodder.com/libs-release/" } // ShulkerBoxTooltip
     }
+
 
     tasks.withType(JavaCompile) {
         options.encoding = "UTF-8"
