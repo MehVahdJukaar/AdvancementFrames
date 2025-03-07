@@ -1,13 +1,11 @@
-package net.mehvahdjukaar.advframes.integration.neoforge;
+package net.mehvahdjukaar.advframes.integration.forge;
 
-import com.simibubi.create.content.redstone.displayLink.AllDisplayBehaviours;
-import com.simibubi.create.content.redstone.displayLink.DisplayBehaviour;
+import com.simibubi.create.api.behaviour.display.DisplaySource;
+import com.simibubi.create.api.registry.CreateRegistries;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkContext;
 import com.simibubi.create.content.redstone.displayLink.source.SingleLineDisplaySource;
 import com.simibubi.create.content.redstone.displayLink.target.DisplayTargetStats;
 import com.simibubi.create.content.trains.display.FlapDisplaySection;
-import com.simibubi.create.foundation.ponder.PonderRegistry;
-import com.simibubi.create.foundation.utility.Components;
 import net.mehvahdjukaar.advframes.AdvFrames;
 import net.mehvahdjukaar.advframes.blocks.StatFrameBlockTile;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
@@ -15,8 +13,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 import java.util.List;
-
-import static com.simibubi.create.infrastructure.ponder.AllPonderTags.DISPLAY_TARGETS;
 
 public class CreateCompatImpl {
 
@@ -39,7 +35,7 @@ public class CreateCompatImpl {
     }
 
     public static class StatDisplaySource extends SingleLineDisplaySource {
-        public static final MutableComponent EMPTY = Components.literal("0");
+        public static final MutableComponent EMPTY = Component.literal("0");
 
         @Override
         protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
