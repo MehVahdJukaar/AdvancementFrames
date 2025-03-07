@@ -6,12 +6,17 @@ public class CreateCompat {
 
     @ExpectPlatform
     public static void setup(){
+        throw new AssertionError();
+    }
 
+    @ExpectPlatform
+    public static void init() {
+        throw new AssertionError();
     }
 
 
     @ExpectPlatform
     public static void setupClient(){
-
+        throw new AssertionError();
     }
 }
