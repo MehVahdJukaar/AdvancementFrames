@@ -1,6 +1,18 @@
 {
-    "advancementframes.gui": "Selecione uma Conquista para exibir",
-    "advancementframes.message": "%1$s fez uma conquista %2$s",
-    "block.advancementframes.advancement_frame": "Quadro de Conquista"
+    "advancementframes.gui.advancements": "Selecione uma conquista para exibir",
+    "advancementframes.gui.statistics": "Selecione uma estatística para exibir",
+    "advancementframes.message.advancement": "%1$s alcançou a conquista %2$s",
+    "advancementframes.message.stat": "%1$s por %2$s: %3$s",
+    "block.advancementframes.advancement_frame": "Moldura de conquistas",
+    "block.advancementframes.stat_frame": "Moldura de estatísticas",
+    "stat.advancementframes.used": "%s usado",
+    "stat.advancementframes.dropped": "%s descartado",
+    "stat.advancementframes.crafted": "%s criado",
+    "stat.advancementframes.mined": "%s minerado",
+    "stat.advancementframes.broken": "%s quebrado",
+    "stat.advancementframes.picked_up": "%s coletado",
+    "stat.advancementframes.killed": "%s morto",
+    "stat.advancementframes.killed_by": "Morto por %s",
+    "advancementframes.display_source.stat": "Valor da estatística"
+  }
   
-}
