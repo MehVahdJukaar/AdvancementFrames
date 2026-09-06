@@ -1,0 +1,17 @@
+{
+  "advancementframes.gui.advancements": "Selecciona un avenç per mostrar",
+  "advancementframes.gui.statistics": "Selecciona una estadística per mostrar",
+  "advancementframes.message.advancement": "%1$s ha aconseguit l'avenç %2$s",
+  "advancementframes.message.stat": "%1$s per %2$s: %3$s",
+  "block.advancementframes.advancement_frame": "Marc expositor d'avenços",
+  "block.advancementframes.stat_frame": "Marc expositor d'estadístiques",
+  "stat.advancementframes.used": "%s utilitzats",
+  "stat.advancementframes.dropped": "%s llançats",
+  "stat.advancementframes.crafted": "%s fabricats",
+  "stat.advancementframes.mined": "%s picats",
+  "stat.advancementframes.broken": "%s trencats",
+  "stat.advancementframes.picked_up": "%s recollits",
+  "stat.advancementframes.killed": "%s assassinats",
+  "stat.advancementframes.killed_by": "Assessinat per %s",
+  "advancementframes.display_source.stat": "Valor de l'estadística"
+}
