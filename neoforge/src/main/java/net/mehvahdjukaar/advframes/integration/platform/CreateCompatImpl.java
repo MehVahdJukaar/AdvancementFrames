@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.advframes.integration.neoforge;
+package net.mehvahdjukaar.advframes.integration.platform;
 
 import com.simibubi.create.api.behaviour.display.DisplaySource;
 import com.simibubi.create.api.registry.CreateRegistries;

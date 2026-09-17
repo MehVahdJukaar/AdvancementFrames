@@ -1,4 +1,5 @@
-build/
+/build/
+../build/
 *.ipr
 run/
 *.iws
@@ -17,4 +18,7 @@ classes/
 .vscode
 .settings
 *.launch
-/neoforge/mods/
+/common/build/
+/fabric/build/
+/neoforge/build/
+/forge/build/

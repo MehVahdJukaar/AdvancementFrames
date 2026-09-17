@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.advframes;
 
 import com.mojang.blaze3d.vertex.BufferUploader;
-import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.mehvahdjukaar.advframes.blocks.AdvancementFrameBlockTile;
 import net.mehvahdjukaar.advframes.blocks.StatFrameBlockTile;
@@ -89,7 +89,7 @@ public class AdvFramesClient {
         }
     }
 
-    @ExpectPlatform
+    @PlatformImpl
     private static void clearForgeGuiLayers(Minecraft minecraft) {
         throw new AssertionError();
     }

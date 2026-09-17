@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.advframes.fabric;
+package net.mehvahdjukaar.advframes.platform;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;

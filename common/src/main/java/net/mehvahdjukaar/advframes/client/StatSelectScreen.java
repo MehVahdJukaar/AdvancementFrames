@@ -6,8 +6,6 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.mehvahdjukaar.advframes.blocks.StatFrameBlockTile;
 import net.mehvahdjukaar.advframes.network.ServerBoundSetStatFramePacket;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;

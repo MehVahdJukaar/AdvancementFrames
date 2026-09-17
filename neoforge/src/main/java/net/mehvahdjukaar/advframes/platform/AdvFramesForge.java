@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.advframes.neoforge;
+package net.mehvahdjukaar.advframes.platform;
 
 import net.mehvahdjukaar.advframes.AdvFrames;
 import net.mehvahdjukaar.advframes.AdvFramesClient;

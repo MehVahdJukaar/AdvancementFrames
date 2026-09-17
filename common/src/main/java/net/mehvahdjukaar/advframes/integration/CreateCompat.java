@@ -1,21 +1,21 @@
 package net.mehvahdjukaar.advframes.integration;
 
-import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 
 public class CreateCompat {
 
-    @ExpectPlatform
+    @PlatformImpl
     public static void setup(){
         throw new AssertionError();
     }
 
-    @ExpectPlatform
+    @PlatformImpl
     public static void init() {
         throw new AssertionError();
     }
 
 
-    @ExpectPlatform
+    @PlatformImpl
     public static void setupClient(){
         throw new AssertionError();
     }

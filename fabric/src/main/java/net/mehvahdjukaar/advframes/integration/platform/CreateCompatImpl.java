@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.advframes.integration.fabric;
+package net.mehvahdjukaar.advframes.integration.platform;
 
 public class CreateCompatImpl {
     public static void init() {
