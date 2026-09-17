@@ -13,5 +13,12 @@
   "stat.advancementframes.picked_up": "%s Picked Up",
   "stat.advancementframes.killed": "%s Killed",
   "stat.advancementframes.killed_by": "Killed by %s",
-  "advancementframes.display_source.stat": "Stat Value"
+  "advancementframes.display_source.stat": "Stat Value",
+  "advancementframes.configuration.visuals": "Visuals",
+  "advancementframes.configuration.visuals.animated_icons": "Animated Icons",
+  "advancementframes.configuration.visuals.animated_icons.description": "Makes advancement icons animated",
+  "advancementframes.configuration.visuals.centered_text": "Centered Text",
+  "advancementframes.configuration.visuals.centered_text.description": "Makes stat frame text centered",
+  "advancementframes.configuration.visuals.stat_update_interval": "Stat Update Interval",
+  "advancementframes.configuration.visuals.stat_update_interval.description": "How ofter the client will request stats update from server in seconds"
 }
