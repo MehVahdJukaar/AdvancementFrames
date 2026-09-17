@@ -1,5 +1,21 @@
 {
   "advancementframes.gui": "选择您要展示的进度",
   "advancementframes.message": "%1$s 取得了进度 %2$s",
-  "block.advancementframes.advancement_frame": "进度展示框"
+  "block.advancementframes.advancement_frame": "进度展示框",
+  
+  "advancementframes.gui.advancements": "选择一个你想要展示的进度",
+  "advancementframes.gui.statistics": "选择一个你想要展示的统计信息",
+  "advancementframes.message.advancement": "%1$s取得了进度%2$s",
+  "advancementframes.message.stat": "%1$s by %2$s: %3$s",
+  "block.advancementframes.advancement_frame": "进度展示框",
+  "block.advancementframes.stat_frame": "统计信息展示框",
+  "stat.advancementframes.used": "%s的使用次数",
+  "stat.advancementframes.dropped": "%s的丢弃个数",
+  "stat.advancementframes.crafted": "%s的合成次数",
+  "stat.advancementframes.mined": "%s的开采次数",
+  "stat.advancementframes.broken": "%s的损坏次数",
+  "stat.advancementframes.picked_up": "%s的拾起个数",
+  "stat.advancementframes.killed": "%s的击杀次数",
+  "stat.advancementframes.killed_by": "被%s击杀次数",
+  "advancementframes.display_source.stat": "统计信息值"
 }
