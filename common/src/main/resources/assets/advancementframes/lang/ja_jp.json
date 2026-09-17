@@ -1,7 +1,7 @@
 {
   "advancementframes.gui.advancements": "表示する進捗を選択する",
   "advancementframes.gui.statistics": "表示する統計を選択する",
-  "advancementframes.message": "%1$sが進捗%2$sを達成しました",
+  "advancementframes.message.advancement": "%1$sが進捗%2$sを達成しました",
   "block.advancementframes.advancement_frame": "進捗額縁",
   "block.advancementframes.stat_frame": "統計額縁",
   "stat.advancementframes.used": "%sを使用した回数",
