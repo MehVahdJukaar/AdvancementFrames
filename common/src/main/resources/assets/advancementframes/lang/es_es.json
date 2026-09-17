@@ -1,6 +1,17 @@
 {
-  "advancementframes.gui": "Selecciona un progreso para exponer",
-  "advancementframes.message": "%1$s ha conseguido el progreso %2$s",
-  "block.advancementframes.advancement_frame": "Marco expositor"
-
+  "advancementframes.gui.advancements": "Selecciona un progreso para mostrar",
+  "advancementframes.gui.statistics": "Selecciona una estadística para mostrar",
+  "advancementframes.message.advancement": "%1$s ha conseguido el progreso %2$s",
+  "advancementframes.message.stat": "%1$s por %2$s: %3$s",
+  "block.advancementframes.advancement_frame": "Marco expositor de progresos",
+  "block.advancementframes.stat_frame": "Marco expositor de estadísticas",
+  "stat.advancementframes.used": "%s usados",
+  "stat.advancementframes.dropped": "%s soltados",
+  "stat.advancementframes.crafted": "%s fabricados",
+  "stat.advancementframes.mined": "%s minados",
+  "stat.advancementframes.broken": "%s rotos",
+  "stat.advancementframes.picked_up": "%s recogidos",
+  "stat.advancementframes.killed": "%s asesinados",
+  "stat.advancementframes.killed_by": "Asesinado por %s",
+  "advancementframes.display_source.stat": "Valor de estadística"
 }
