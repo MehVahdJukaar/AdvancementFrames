@@ -1,5 +1,6 @@
 {
   "advancementframes.gui.advancements": "Select an Advancement to display",
+  "advancementframes.gui.page": "Page %s/%s",
   "advancementframes.gui.statistics": "Select a Statistic to display",
   "advancementframes.message.advancement": "%1$s has made the advancement %2$s",
   "advancementframes.message.stat": "%1$s by %2$s: %3$s",
