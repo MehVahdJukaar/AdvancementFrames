@@ -66,6 +66,7 @@ public class AdvFrames {
 
     //called on mod creation
     public static void commonInit() {
+        CommonConfigs.init();
         ModMessages.init();
         RegHelper.addItemsToTabsRegistration(AdvFrames::addCreativeTabItems);
         PlatHelper.addCommonSetup(AdvFrames::commonSetup);

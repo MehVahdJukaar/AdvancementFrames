@@ -1,2 +1,1 @@
-- added translations
-- added buttons to cycle advancement pages
+- added some configs

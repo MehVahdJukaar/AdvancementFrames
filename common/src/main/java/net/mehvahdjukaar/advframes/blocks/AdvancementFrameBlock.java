@@ -92,6 +92,21 @@ public class AdvancementFrameBlock extends BaseFrameBlock {
     }
 
 
+    @Override
+    protected boolean hasAnalogOutputSignal(BlockState state) {
+        return true;
+    }
+
+    @Override
+    protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos, Direction direction) {
+        return switch (state.getValue(TYPE)) {
+            case TASK -> 5;
+            case GOAL -> 10;
+            case CHALLENGE -> 15;
+            case NONE -> 0;
+        };
+    }
+
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {

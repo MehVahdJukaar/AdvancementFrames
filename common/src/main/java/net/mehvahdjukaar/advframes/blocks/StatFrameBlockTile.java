@@ -2,8 +2,10 @@ package net.mehvahdjukaar.advframes.blocks;
 
 import com.mojang.authlib.GameProfile;
 import net.mehvahdjukaar.advframes.AdvFrames;
+import net.mehvahdjukaar.advframes.CommonConfigs;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.SectionPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -117,7 +119,7 @@ public class StatFrameBlockTile extends BaseFrameBlockTile {
         var owner = this.getOwner();
         if (this.stat != null && owner != null && owner.id().isPresent()) {
             var player = level.getPlayerByUUID(owner.id().get());
-            if (player instanceof ServerPlayer serverPlayer) {
+            if (player instanceof ServerPlayer serverPlayer && isWithinUpdateRange(serverPlayer)) {
                 var stats = serverPlayer.getStats();
                 int newValue = stats.getValue(this.stat);
                 if(newValue != this.value){
@@ -131,6 +133,15 @@ public class StatFrameBlockTile extends BaseFrameBlockTile {
         }
     }
 
+
+    private boolean isWithinUpdateRange(ServerPlayer player) {
+        int range = CommonConfigs.STAT_UPDATE_RANGE.get();
+        if (range >= CommonConfigs.INFINITE_STAT_RANGE) return true;
+        BlockPos playerPos = player.blockPosition();
+        int dx = Math.abs(SectionPos.blockToSectionCoord(playerPos.getX()) - SectionPos.blockToSectionCoord(worldPosition.getX()));
+        int dz = Math.abs(SectionPos.blockToSectionCoord(playerPos.getZ()) - SectionPos.blockToSectionCoord(worldPosition.getZ()));
+        return range > 0 && Math.max(dx, dz) <= range;
+    }
 
     public boolean needsVisualUpdate() {
         if (this.needsVisualRefresh) {
