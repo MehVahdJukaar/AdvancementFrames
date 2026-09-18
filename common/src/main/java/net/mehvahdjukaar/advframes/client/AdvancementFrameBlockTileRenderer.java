@@ -77,10 +77,10 @@ public class AdvancementFrameBlockTileRenderer extends BaseFrameTileRenderer<Adv
         int light = state.lightCoords;
         poseStack.scale(1, -1, -1);
         collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(tex), (pose, buffer) -> {
-            buffer.addVertex(pose, -s, s, 0).setColor(-1).setUv(1, 0).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal(pose, 0, 0, -1);
-            buffer.addVertex(pose, s, s, 0).setColor(-1).setUv(0, 0).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal(pose, 0, 0, -1);
-            buffer.addVertex(pose, s, -s, 0).setColor(-1).setUv(0, 1).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal(pose, 0, 0, -1);
-            buffer.addVertex(pose, -s, -s, 0).setColor(-1).setUv(1, 1).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal(pose, 0, 0, -1);
+            buffer.addVertex(pose, -s, s, 0).setColor(-1).setUv(0, 0).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal(pose, 0, 0, -1);
+            buffer.addVertex(pose, s, s, 0).setColor(-1).setUv(1, 0).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal(pose, 0, 0, -1);
+            buffer.addVertex(pose, s, -s, 0).setColor(-1).setUv(1, 1).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal(pose, 0, 0, -1);
+            buffer.addVertex(pose, -s, -s, 0).setColor(-1).setUv(0, 1).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal(pose, 0, 0, -1);
         });
 
         poseStack.popPose();
