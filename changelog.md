@@ -1,1 +1,2 @@
 - added translations
+- added buttons to cycle advancement pages
