@@ -21,5 +21,7 @@
   "advancementframes.configuration.visuals.centered_text": "Centered Text",
   "advancementframes.configuration.visuals.centered_text.description": "Makes stat frame text centered",
   "advancementframes.configuration.visuals.stat_update_interval": "Stat Update Interval",
-  "advancementframes.configuration.visuals.stat_update_interval.description": "How ofter the client will request stats update from server in seconds"
+  "advancementframes.configuration.visuals.stat_update_interval.description": "How ofter the client will request stats update from server in seconds",
+  "advancements.advancementframes.story.la_peace.title": "La Peace",
+  "advancements.advancementframes.story.la_peace.description": "Obtain La Peace"
 }

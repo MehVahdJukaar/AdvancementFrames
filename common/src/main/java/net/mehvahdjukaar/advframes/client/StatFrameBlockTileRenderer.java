@@ -15,6 +15,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.stats.Stat;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.phys.Vec3;
@@ -96,7 +97,7 @@ public class StatFrameBlockTileRenderer extends BaseFrameTileRenderer<StatFrameB
             float dx = centered ? (-font.width(str) / 2f) + 0.5f : -(0.5f - PAPER_X_MARGIN) / scale;
             float dy = (((1f / scale) - (8 * numberOfLines)) / 2f) + 0.5f;
             collector.submitText(poseStack, dx, dy + 8 * lin, str, false, Font.DisplayMode.NORMAL,
-                    textProperties.light(), textProperties.darkenedColor(), 0, 0);
+                    textProperties.light(), ARGB.opaque(textProperties.darkenedColor()), 0, 0);
         }
 
         poseStack.popPose();
@@ -111,7 +112,7 @@ public class StatFrameBlockTileRenderer extends BaseFrameTileRenderer<StatFrameB
 
         Component c = Component.literal(number).withStyle(ChatFormatting.DARK_RED);
         collector.submitText(poseStack, dx, 40, c.getVisualOrderText(), true, Font.DisplayMode.NORMAL,
-                textProperties.light(), textProperties.darkenedColor(), 0, 0);
+                textProperties.light(), ARGB.opaque(textProperties.darkenedColor()), 0, 0);
 
         poseStack.popPose();
 

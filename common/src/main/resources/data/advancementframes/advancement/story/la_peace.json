@@ -1,0 +1,31 @@
+{
+  "parent": "minecraft:story/iron_tools",
+  "criteria": {
+    "lapis_lazuli": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:lapis_lazuli"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.advancementframes.story.la_peace.description"
+    },
+    "icon": {
+      "id": "minecraft:lapis_lazuli"
+    },
+    "title": {
+      "translate": "advancements.advancementframes.story.la_peace.title"
+    }
+  },
+  "requirements": [
+    [
+      "lapis_lazuli"
+    ]
+  ]
+}
