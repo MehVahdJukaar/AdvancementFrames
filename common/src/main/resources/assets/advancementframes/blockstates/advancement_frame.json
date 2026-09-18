@@ -1,29 +1,34 @@
 {
   "variants": {
     "facing=north": {
-      "model": "advancementframes:block/advancement_frame"
+      "type": "advancementframes:advancement_frame",
+      "fabric:type": "advancementframes:advancement_frame",
+      "frame": {"model": "advancementframes:block/frame"}
     },
     "facing=east": {
-      "model": "advancementframes:block/advancement_frame",
-      "y": 90
+      "type": "advancementframes:advancement_frame",
+      "fabric:type": "advancementframes:advancement_frame",
+      "frame": {"model": "advancementframes:block/frame", "y": 90}
     },
     "facing=south": {
-      "model": "advancementframes:block/advancement_frame",
-      "y": 180
+      "type": "advancementframes:advancement_frame",
+      "fabric:type": "advancementframes:advancement_frame",
+      "frame": {"model": "advancementframes:block/frame", "y": 180}
     },
     "facing=west": {
-      "model": "advancementframes:block/advancement_frame",
-      "y": 270
+      "type": "advancementframes:advancement_frame",
+      "fabric:type": "advancementframes:advancement_frame",
+      "frame": {"model": "advancementframes:block/frame", "y": 270}
     },
     "facing=up": {
-      "model": "advancementframes:block/advancement_frame",
-      "x": 270,
-	  "y": 180
+      "type": "advancementframes:advancement_frame",
+      "fabric:type": "advancementframes:advancement_frame",
+      "frame": {"model": "advancementframes:block/frame", "x": 270, "y": 180}
     },
     "facing=down": {
-      "model": "advancementframes:block/advancement_frame",
-      "x": 90,
-	  "y": 180
+      "type": "advancementframes:advancement_frame",
+      "fabric:type": "advancementframes:advancement_frame",
+      "frame": {"model": "advancementframes:block/frame", "x": 90, "y": 180}
     }
   }
 }

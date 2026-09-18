@@ -1,48 +1,43 @@
 package net.mehvahdjukaar.advframes;
 
-import com.mojang.blaze3d.vertex.BufferUploader;
 import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.mehvahdjukaar.advframes.blocks.AdvancementFrameBlockTile;
 import net.mehvahdjukaar.advframes.blocks.StatFrameBlockTile;
 import net.mehvahdjukaar.advframes.client.*;
 import net.mehvahdjukaar.advframes.integration.CreateCompat;
-import net.mehvahdjukaar.moonlight.api.client.model.NestedModelLoader;
-import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
+import net.mehvahdjukaar.moonlight.api.client.model.NestedUnbakedModel;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.resources.model.ModelResourceLocation;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.stats.Stat;
 import net.minecraft.world.entity.player.Player;
 
 public class AdvFramesClient {
-    public static final ModelResourceLocation TASK_MODEL = RenderUtil.getStandaloneModelLocation(AdvFrames.res("item/task"));
-    public static final ModelResourceLocation GOAL_MODEL = RenderUtil.getStandaloneModelLocation(AdvFrames.res("item/goal"));
-    public static final ModelResourceLocation CHALLENGE_MODEL = RenderUtil.getStandaloneModelLocation(AdvFrames.res("item/challenge"));
+    public static final Identifier TASK_MODEL = AdvFrames.res("item/task");
+    public static final Identifier GOAL_MODEL = AdvFrames.res("item/goal");
+    public static final Identifier CHALLENGE_MODEL = AdvFrames.res("item/challenge");
     protected static long gameTime;
 
     public static void init() {
         ClientConfigs.init();
-        ClientHelper.addSpecialModelRegistration(AdvFramesClient::registerSpecialModels);
+        ClientHelper.addStandaloneModelRegistration(AdvFramesClient::registerStandaloneModels);
         ClientHelper.addBlockEntityRenderersRegistration(AdvFramesClient::registerBlockEntityRenderers);
-        ClientHelper.addModelLoaderRegistration(AdvFramesClient::registerModelLoaders);
+        ClientHelper.addBlockModelRegistration(AdvFramesClient::registerBlockModels);
 
         ClientHelper.addClientSetup(AdvFramesClient::clientSetup);
     }
 
     public static void clientSetup() {
         if (PlatHelper.isModLoaded("create")) CreateCompat.setupClient();
-        ClientHelper.registerRenderType(AdvFrames.ADVANCEMENT_FRAME.get(), RenderType.cutout());
     }
 
-    private static void registerModelLoaders(ClientHelper.ModelLoaderEvent event) {
-        event.register(AdvFrames.res("advancement_frame"), new NestedModelLoader("frame", AdvancementFrameModel::new));
+    private static void registerBlockModels(ClientHelper.BlockModelEvent event) {
+        event.register(AdvFrames.res("advancement_frame"), NestedUnbakedModel.codec("frame", AdvancementFrameModel::new));
     }
 
     private static void registerBlockEntityRenderers(ClientHelper.BlockEntityRendererEvent event) {
@@ -51,7 +46,7 @@ public class AdvFramesClient {
     }
 
 
-    private static void registerSpecialModels(ClientHelper.SpecialModelEvent event) {
+    private static void registerStandaloneModels(ClientHelper.StandaloneModelEvent event) {
         event.register(TASK_MODEL);
         event.register(GOAL_MODEL);
         event.register(CHALLENGE_MODEL);
@@ -79,11 +74,10 @@ public class AdvFramesClient {
             }
 
             minecraft.screen = screen;
-            BufferUploader.reset();
+            screen.added();
             minecraft.mouseHandler.releaseMouse();
             KeyMapping.releaseAll();
-            screen.init(minecraft, minecraft.getWindow().getGuiScaledWidth(), minecraft.getWindow().getGuiScaledHeight());
-            minecraft.noRender = false;
+            screen.init(minecraft.getWindow().getGuiScaledWidth(), minecraft.getWindow().getGuiScaledHeight());
 
             minecraft.updateTitle();
         }

@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "advancementframes:item/stat_frame"
+  }
+}

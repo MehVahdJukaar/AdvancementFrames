@@ -9,7 +9,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.StatType;
@@ -21,13 +21,13 @@ public class ServerBoundSetStatFramePacket implements Message {
             AdvFrames.res("set_stat_frame"), ServerBoundSetStatFramePacket::new);
 
     private final BlockPos pos;
-    public final ResourceLocation statValue;
-    public final ResourceLocation statType;
+    public final Identifier statValue;
+    public final Identifier statType;
 
     public ServerBoundSetStatFramePacket(RegistryFriendlyByteBuf buf) {
         this.pos = buf.readBlockPos();
-        this.statValue = buf.readResourceLocation();
-        this.statType = buf.readResourceLocation();
+        this.statValue = buf.readIdentifier();
+        this.statType = buf.readIdentifier();
     }
 
     public <T> ServerBoundSetStatFramePacket(BlockPos pos, StatType<T> stat, T obj) {
@@ -39,8 +39,8 @@ public class ServerBoundSetStatFramePacket implements Message {
     @Override
     public void write(RegistryFriendlyByteBuf buf) {
         buf.writeBlockPos(this.pos);
-        buf.writeResourceLocation(this.statValue);
-        buf.writeResourceLocation(this.statType);
+        buf.writeIdentifier(this.statValue);
+        buf.writeIdentifier(this.statType);
     }
 
     @Override
@@ -50,7 +50,7 @@ public class ServerBoundSetStatFramePacket implements Message {
             BlockPos pos = this.pos;
             BlockEntity tile = level.getBlockEntity(pos);
             if (tile instanceof StatFrameBlockTile te) {
-               var stat =  BuiltInRegistries.STAT_TYPE.get(statType);
+               var stat =  BuiltInRegistries.STAT_TYPE.getValue(statType);
                if(stat != null) {
                    te.setStat(stat, statValue, serverPlayer);
                    te.updateStatValue();

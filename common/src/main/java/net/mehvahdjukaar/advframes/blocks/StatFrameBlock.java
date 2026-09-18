@@ -9,7 +9,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stat;
 import net.minecraft.stats.StatType;
@@ -17,7 +17,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.component.ResolvableProfile;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
@@ -66,7 +65,7 @@ public class StatFrameBlock extends BaseFrameBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-        if (level.isClientSide) return null;
+        if (level.isClientSide()) return null;
         return Utils.getTicker(blockEntityType, AdvFrames.STAT_FRAME_TILE.get(), StatFrameBlockTile::tick);
     }
 
@@ -85,25 +84,25 @@ public class StatFrameBlock extends BaseFrameBlock {
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             if (level.getBlockEntity(pos) instanceof StatFrameBlockTile tile) {
                 if (tile.getStat() == null) {
                     AdvFramesClient.setStatScreen(tile, player);
                 } else {
-                    ResolvableProfile owner = tile.getOwner();
-                    if (owner != null && owner.isResolved()) {
+                    Component ownerName = tile.getOwnerName();
+                    if (ownerName != null) {
 
                         Stat stat = tile.getStat();
-                        Component name = tile.getOwnerName().copy().withStyle(ChatFormatting.GOLD);
+                        Component name = ownerName.copy().withStyle(ChatFormatting.GOLD);
                         Component title = getStatComponent(stat);
                         Component number = Component.literal(stat.format(tile.getValue())).withStyle(ChatFormatting.DARK_RED);
-                        player.displayClientMessage(Component.translatable("advancementframes.message.stat",
-                                title, name, number), true);
+                        player.sendOverlayMessage(Component.translatable("advancementframes.message.stat",
+                                title, name, number));
                     }
                 }
             }
         }
-        return InteractionResult.sidedSuccess(level.isClientSide);
+        return InteractionResult.SUCCESS;
     }
 
 
@@ -118,13 +117,13 @@ public class StatFrameBlock extends BaseFrameBlock {
         StatType<?> type = stat.getType();
         Object value = stat.getValue();
         MutableComponent text;
-        ResourceLocation statId = BuiltInRegistries.STAT_TYPE.getKey(type);
+        Identifier statId = BuiltInRegistries.STAT_TYPE.getKey(type);
         switch (value) {
             case ItemLike i -> text = Component.translatable(
-                    "stat.advancementframes." + statId.getPath(), i.asItem().getDescription().getString());
+                    "stat.advancementframes." + statId.getPath(), Component.translatable(i.asItem().getDescriptionId()).getString());
             case EntityType<?> e -> text = Component.translatable(
                     "stat.advancementframes." + statId.getPath(), e.getDescription().getString());
-            case ResourceLocation resourceLocation -> {
+            case Identifier identifier -> {
                 String string = stat.getValue().toString();
                 text = Component.translatable("stat." + string.replace(':', '.'));
             }

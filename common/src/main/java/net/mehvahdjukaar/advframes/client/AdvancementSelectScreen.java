@@ -8,15 +8,17 @@ import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.minecraft.advancements.AdvancementNode;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.advancements.AdvancementTab;
 import net.minecraft.client.gui.screens.advancements.AdvancementWidget;
 import net.minecraft.client.gui.screens.advancements.AdvancementsScreen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.multiplayer.ClientAdvancements;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 
@@ -105,14 +107,14 @@ public class AdvancementSelectScreen extends AdvancementsScreen {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (button == 0) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+        if (event.button() == 0) {
             AdvancementTab tab = this.selectedTab;
             if (tab != null) {
                 int oX = (this.width - 252) / 2;
                 int oY = (this.height - 140) / 2;
-                int x = (int) (mouseX - oX - 9);
-                int y = (int) (mouseY - oY - 18);
+                int x = (int) (event.x() - oX - 9);
+                int y = (int) (event.y() - oY - 18);
 
                 int scrollX = Mth.floor(tab.scrollX);
                 int scrollY = Mth.floor(tab.scrollY);
@@ -135,21 +137,22 @@ public class AdvancementSelectScreen extends AdvancementsScreen {
                 }
             }
         }
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, doubleClick);
     }
 
-    private static final ResourceLocation WINDOW_LOCATION = ResourceLocation.withDefaultNamespace("textures/gui/advancements/window.png");
+    private static final Identifier WINDOW_LOCATION = Identifier.withDefaultNamespace("textures/gui/advancements/window.png");
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        super.render(graphics, mouseX, mouseY, partialTick);
-        pageButtons.render(graphics, mouseX, mouseY, partialTick);
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+        super.extractRenderState(graphics, mouseX, mouseY, partialTick);
+        graphics.nextStratum();
+        pageButtons.extractRenderState(graphics, mouseX, mouseY, partialTick);
     }
 
     @Override
-    public void renderWindow(GuiGraphics graphics, int x, int y) {
-        super.renderWindow(graphics, x, y);
-        graphics.blit(WINDOW_LOCATION, x, y + 5, 0, 5, 252, 11);
-        graphics.drawString(this.font, title2, x + 8, y + 6, 4210752, false);
+    public void extractWindow(GuiGraphicsExtractor graphics, int x, int y, int mouseX, int mouseY) {
+        super.extractWindow(graphics, x, y, mouseX, mouseY);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, WINDOW_LOCATION, x, y + 5, 0, 5, 252, 11, 256, 256);
+        graphics.text(this.font, title2, x + 8, y + 6, 0xFF404040, false);
     }
 }

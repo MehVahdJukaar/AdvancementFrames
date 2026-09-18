@@ -8,7 +8,7 @@ import net.mehvahdjukaar.advframes.integration.CreateCompat;
 import net.mehvahdjukaar.advframes.network.ModMessages;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
@@ -30,38 +30,36 @@ import java.util.function.Supplier;
 public class AdvFrames {
     public static final String MOD_ID = "advancementframes";
 
-    public static ResourceLocation res(String name) {
-        return ResourceLocation.fromNamespaceAndPath(MOD_ID, name);
+    public static Identifier res(String name) {
+        return Identifier.fromNamespaceAndPath(MOD_ID, name);
     }
 
     public static final Logger LOGGER = LogManager.getLogger("Advancement Frames");
 
-    public static final ResourceLocation ADVANCEMENT_FRAME_NAME = AdvFrames.res("advancement_frame");
+    public static final Identifier ADVANCEMENT_FRAME_NAME = AdvFrames.res("advancement_frame");
     public static final Supplier<Block> ADVANCEMENT_FRAME = RegHelper.registerBlock(ADVANCEMENT_FRAME_NAME,
-            () -> new AdvancementFrameBlock(
-                    BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_WOOD)
-                            .mapColor(MapColor.NONE)
-                            .sound(SoundType.WOOD)
-                            .strength(0.25f, 0.25f)
-                            .noCollission()));
+            AdvancementFrameBlock::new,
+            BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_WOOD)
+                    .mapColor(MapColor.NONE)
+                    .sound(SoundType.WOOD)
+                    .strength(0.25f, 0.25f)
+                    .noCollision());
 
-    public static final Supplier<Item> ADVANCEMENT_FRAME_ITEM = RegHelper.registerItem(ADVANCEMENT_FRAME_NAME,
-            () -> new BlockItem(ADVANCEMENT_FRAME.get(), new Item.Properties()));
+    public static final Supplier<BlockItem> ADVANCEMENT_FRAME_ITEM = RegHelper.registerBlockItem(
+            ADVANCEMENT_FRAME_NAME, ADVANCEMENT_FRAME, new Item.Properties());
 
     public static final Supplier<BlockEntityType<AdvancementFrameBlockTile>> ADVANCEMENT_FRAME_TILE = RegHelper.registerBlockEntityType(
-            ADVANCEMENT_FRAME_NAME, () -> PlatHelper.newBlockEntityType(
-                    AdvancementFrameBlockTile::new, ADVANCEMENT_FRAME.get()));
+            ADVANCEMENT_FRAME_NAME, AdvancementFrameBlockTile::new, ADVANCEMENT_FRAME);
 
-    public static final ResourceLocation STAT_FRAME_NAME = AdvFrames.res("stat_frame");
+    public static final Identifier STAT_FRAME_NAME = AdvFrames.res("stat_frame");
     public static final Supplier<Block> STAT_FRAME = RegHelper.registerBlock(STAT_FRAME_NAME,
-            () -> new StatFrameBlock(BlockBehaviour.Properties.ofFullCopy(ADVANCEMENT_FRAME.get())));
+            StatFrameBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(ADVANCEMENT_FRAME.get()));
 
-    public static final Supplier<Item> ASTAT_FRAME_ITEM = RegHelper.registerItem(STAT_FRAME_NAME,
-            () -> new BlockItem(STAT_FRAME.get(), new Item.Properties()));
+    public static final Supplier<BlockItem> ASTAT_FRAME_ITEM = RegHelper.registerBlockItem(
+            STAT_FRAME_NAME, STAT_FRAME, new Item.Properties());
 
     public static final Supplier<BlockEntityType<StatFrameBlockTile>> STAT_FRAME_TILE = RegHelper.registerBlockEntityType(
-            STAT_FRAME_NAME, () -> PlatHelper.newBlockEntityType(
-                    StatFrameBlockTile::new, STAT_FRAME.get()));
+            STAT_FRAME_NAME, StatFrameBlockTile::new, STAT_FRAME);
 
 
     //called on mod creation

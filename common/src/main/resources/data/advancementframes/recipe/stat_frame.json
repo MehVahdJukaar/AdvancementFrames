@@ -6,12 +6,8 @@
     "000"
   ],
   "key": {
-    "0": {
-      "item": "minecraft:stick"
-    },
-    "1": {
-      "item": "minecraft:quartz"
-    }
+    "0": "minecraft:stick",
+    "1": "minecraft:quartz"
   },
   "result": {
     "id": "advancementframes:stat_frame",

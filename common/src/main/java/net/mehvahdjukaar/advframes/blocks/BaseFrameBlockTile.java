@@ -1,23 +1,20 @@
 package net.mehvahdjukaar.advframes.blocks;
 
-import com.mojang.authlib.properties.PropertyMap;
-import net.mehvahdjukaar.advframes.AdvFrames;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.component.ResolvableProfile;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
 import java.util.UUID;
-
-import static net.minecraft.world.level.block.entity.SkullBlockEntity.CHECKED_MAIN_THREAD_EXECUTOR;
 
 public abstract class BaseFrameBlockTile extends BlockEntity {
 
@@ -28,26 +25,17 @@ public abstract class BaseFrameBlockTile extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
-        if (this.owner != null) {
-            tag.put("profile", ResolvableProfile.CODEC.encodeStart(NbtOps.INSTANCE, this.owner).getOrThrow());
-        }
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        output.storeNullable("profile", ResolvableProfile.CODEC, this.owner);
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
         //TODO: remove
-        if (tag.contains("PlayerID")) {
-            UUID id = tag.getUUID("PlayerID");
-            this.setOwner(new ResolvableProfile(Optional.empty(), Optional.of(id), new PropertyMap()));
-        }
-        if (tag.contains("profile")) {
-            ResolvableProfile.CODEC.parse(NbtOps.INSTANCE, tag.get("profile")).resultOrPartial((string) -> {
-                AdvFrames.LOGGER.error("Failed to load profile from player head: {}", string);
-            }).ifPresent(this::setOwner);
-        }
+        input.read("PlayerID", UUIDUtil.CODEC).ifPresent(id -> this.setOwner(ResolvableProfile.createUnresolved(id)));
+        input.read("profile", ResolvableProfile.CODEC).ifPresent(this::setOwner);
     }
 
     public ResolvableProfile getOwner() {
@@ -60,18 +48,13 @@ public abstract class BaseFrameBlockTile extends BlockEntity {
     }
 
     public void setOwner(@Nullable ResolvableProfile owner) {
-        synchronized (this) {
-            this.owner = owner;
-        }
+        this.owner = owner;
+        this.setChanged();
+    }
 
-        if (this.owner != null && !this.owner.isResolved()) {
-            this.owner.resolve().thenAcceptAsync((resolvableProfile) -> {
-                this.owner = resolvableProfile;
-                this.setChanged();
-            }, CHECKED_MAIN_THREAD_EXECUTOR);
-        } else {
-            this.setChanged();
-        }
+    @Nullable
+    public UUID getOwnerId() {
+        return owner == null ? null : owner.partialProfile().id();
     }
 
     @Nullable

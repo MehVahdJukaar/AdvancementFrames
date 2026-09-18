@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.advframes.integration.platform;
 
+/*
 import com.simibubi.create.api.behaviour.display.DisplaySource;
 import com.simibubi.create.api.registry.CreateRegistries;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkContext;
@@ -13,10 +14,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 import java.util.List;
+*/
 
 public class CreateCompatImpl {
 
     public static void init(){
+        /*
         RegHelper.register(
                 AdvFrames.res("stat_display_source"), () -> {
                     var obj = new StatDisplaySource();
@@ -24,6 +27,7 @@ public class CreateCompatImpl {
                     return obj;
                 },
                 CreateRegistries.DISPLAY_SOURCE);
+        */
     }
 
     public static void setup() {
@@ -34,6 +38,7 @@ public class CreateCompatImpl {
         //PonderRegistry.TAGS.forTag(DISPLAY_TARGETS).add(AdvFrames.STAT_FRAME.get());
     }
 
+    /*
     public static class StatDisplaySource extends SingleLineDisplaySource {
         public static final MutableComponent EMPTY = Component.literal("0");
 
@@ -70,4 +75,5 @@ public class CreateCompatImpl {
         }
 
     }
+    */
 }

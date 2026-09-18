@@ -1,6 +1,6 @@
 {
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "advancementframes:item/task"
+		"layer0": "advancementframes:block/task"
 	}
 }

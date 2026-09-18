@@ -23,14 +23,14 @@ itemIcon = "minecraft:brush" #catalogue icon
 [[dependencies.${mod_id}]]
     modId = "neoforge"
     type = "required"
-    versionRange = "*"
+    versionRange = "[26.1.2.94,]"
     ordering = "NONE"
     side = "BOTH"
 
 [[dependencies.${mod_id}]]
     modId = "minecraft"
     type = "required"
-    versionRange = "[${minecraft_version}]"
+    versionRange = "${minecraft_version}"
     ordering = "NONE"
     side = "BOTH"
 

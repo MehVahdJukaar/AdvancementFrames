@@ -8,7 +8,7 @@ import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -19,11 +19,11 @@ public class ServerBoundSetAdvancementFramePacket implements Message {
             Message.makeType(AdvFrames.res("set_advancement_frame"), ServerBoundSetAdvancementFramePacket::new);
 
     private final BlockPos pos;
-    public final ResourceLocation advancementId;
+    public final Identifier advancementId;
 
     public ServerBoundSetAdvancementFramePacket(RegistryFriendlyByteBuf buf) {
         this.pos = buf.readBlockPos();
-        this.advancementId = buf.readResourceLocation();
+        this.advancementId = buf.readIdentifier();
     }
 
     public ServerBoundSetAdvancementFramePacket(BlockPos pos, AdvancementHolder advancement) {
@@ -34,13 +34,13 @@ public class ServerBoundSetAdvancementFramePacket implements Message {
     @Override
     public void write(RegistryFriendlyByteBuf buf) {
         buf.writeBlockPos(this.pos);
-        buf.writeResourceLocation(this.advancementId);
+        buf.writeIdentifier(this.advancementId);
     }
 
     @Override
     public void handle(Context context) {
         if (context.getPlayer() instanceof ServerPlayer serverPlayer) {
-            ServerLevel level = (ServerLevel) serverPlayer.level();
+            ServerLevel level = serverPlayer.level();
             BlockPos pos = this.pos;
             BlockEntity tile = level.getBlockEntity(pos);
             if (tile instanceof AdvancementFrameBlockTile te) {

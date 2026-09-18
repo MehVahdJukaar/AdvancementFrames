@@ -1,15 +1,12 @@
 package net.mehvahdjukaar.advframes.blocks;
 
-import com.mojang.authlib.GameProfile;
 import net.mehvahdjukaar.advframes.AdvFrames;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stat;
 import net.minecraft.stats.StatType;
@@ -17,11 +14,14 @@ import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.component.ResolvableProfile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 public class StatFrameBlockTile extends BaseFrameBlockTile {
 
@@ -39,9 +39,9 @@ public class StatFrameBlockTile extends BaseFrameBlockTile {
         super(AdvFrames.STAT_FRAME_TILE.get(), pos, state);
     }
 
-    public <T> void setStat(StatType<T> stat, ResourceLocation objId, ServerPlayer player) {
-        this.stat = stat.get(Objects.requireNonNull(stat.getRegistry().get(objId)));
-        this.setOwner(new ResolvableProfile(player.getGameProfile()));
+    public <T> void setStat(StatType<T> stat, Identifier objId, ServerPlayer player) {
+        this.stat = stat.get(Objects.requireNonNull(stat.getRegistry().getValue(objId)));
+        this.setOwner(ResolvableProfile.createResolved(player.getGameProfile()));
     }
 
     @Nullable
@@ -50,35 +50,36 @@ public class StatFrameBlockTile extends BaseFrameBlockTile {
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
         if (this.stat != null) {
-            tag.putString("Stat", BuiltInRegistries.STAT_TYPE.getKey(stat.getType()).toString());
-            tag.putString("StatKey", getStatKey(stat).toString());
-            tag.putInt("Value", value);
+            output.store("Stat", Identifier.CODEC, BuiltInRegistries.STAT_TYPE.getKey(stat.getType()));
+            output.store("StatKey", Identifier.CODEC, getStatKey(stat));
+            output.putInt("Value", value);
         }
     }
 
-    private static <T> ResourceLocation getStatKey(Stat<T> stat) {
+    private static <T> Identifier getStatKey(Stat<T> stat) {
         return stat.getType().getRegistry().getKey(stat.getValue());
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
         this.stat = null;
-        if (tag.contains("Stat") && tag.contains("StatKey")) {
-            var statValue = ResourceLocation.tryParse(tag.getString("StatKey"));
-            var type = BuiltInRegistries.STAT_TYPE.get(ResourceLocation.tryParse(tag.getString("Stat")));
-            this.stat = getInstance(statValue, type);
-            this.value = tag.getInt("Value");
+        var statType = input.read("Stat", Identifier.CODEC);
+        var statValue = input.read("StatKey", Identifier.CODEC);
+        if (statType.isPresent() && statValue.isPresent()) {
+            var type = BuiltInRegistries.STAT_TYPE.getValue(statType.get());
+            this.stat = getInstance(statValue.get(), type);
+            this.value = input.getIntOr("Value", 0);
         }
     }
 
     @Nullable
-    private <T> Stat<T> getInstance(ResourceLocation id, StatType<T> type) {
+    private <T> Stat<T> getInstance(Identifier id, StatType<T> type) {
         if (type == null) return null;
-        T value = type.getRegistry().get(id);
+        T value = type.getRegistry().getValue(id);
         if (value == null) return null;
         return type.get(value);
     }
@@ -114,9 +115,9 @@ public class StatFrameBlockTile extends BaseFrameBlockTile {
     }
 
     public void updateStatValue() {
-        var owner = this.getOwner();
-        if (this.stat != null && owner != null && owner.id().isPresent()) {
-            var player = level.getPlayerByUUID(owner.id().get());
+        UUID ownerId = this.getOwnerId();
+        if (this.stat != null && ownerId != null) {
+            var player = level.getPlayerByUUID(ownerId);
             if (player instanceof ServerPlayer serverPlayer) {
                 var stats = serverPlayer.getStats();
                 int newValue = stats.getValue(this.stat);

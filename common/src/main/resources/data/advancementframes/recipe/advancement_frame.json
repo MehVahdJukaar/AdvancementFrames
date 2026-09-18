@@ -6,12 +6,8 @@
     "000"
   ],
   "key": {
-    "0": {
-      "item": "minecraft:stick"
-    },
-    "1": {
-      "item": "minecraft:emerald"
-    }
+    "0": "minecraft:stick",
+    "1": "minecraft:emerald"
   },
   "result": {
     "id": "advancementframes:advancement_frame",

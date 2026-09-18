@@ -1,99 +1,96 @@
 package net.mehvahdjukaar.advframes.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.mehvahdjukaar.advframes.blocks.BaseFrameBlock;
 import net.mehvahdjukaar.advframes.blocks.BaseFrameBlockTile;
 import net.mehvahdjukaar.moonlight.api.client.util.LOD;
-import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
-import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.ARGB;
+import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.phys.HitResult;
-import org.joml.Matrix4f;
+import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
-public abstract class BaseFrameTileRenderer<T extends BaseFrameBlockTile> implements BlockEntityRenderer<T> {
+public abstract class BaseFrameTileRenderer<T extends BaseFrameBlockTile, S extends BaseFrameTileRenderer.FrameRenderState>
+        implements BlockEntityRenderer<T, S> {
 
-    protected final ItemRenderer itemRenderer;
-    protected final EntityRenderDispatcher entityRenderer;
     protected final Font font;
     protected final Minecraft minecraft;
-    protected final Camera camera;
 
     protected BaseFrameTileRenderer(BlockEntityRendererProvider.Context context) {
         this.minecraft = Minecraft.getInstance();
-        this.itemRenderer = minecraft.getItemRenderer();
-        this.entityRenderer = minecraft.getEntityRenderDispatcher();
-        this.font = minecraft.font;
-        this.camera = minecraft.gameRenderer.getMainCamera();
+        this.font = context.font();
     }
 
-    public void renderTopTextBottomText(LOD lod, T tile, PoseStack poseStack,
-                                        MultiBufferSource buffer,
-                                        int light, float offset) {
-        if (Minecraft.renderNames() && lod.isVeryNear()) {
-            HitResult hit = minecraft.hitResult;
-            if (hit != null && hit.getType() == HitResult.Type.BLOCK) {
-                BlockPos pos = tile.getBlockPos();
-                BlockPos hitPos = BlockPos.containing(hit.getLocation());
-                if (pos.equals(hitPos)) {
+    public static class FrameRenderState extends BlockEntityRenderState {
+        public Direction facing = Direction.NORTH;
+        public boolean veryNear;
+        @Nullable
+        public FormattedCharSequence title;
+        public int titleColor;
+        @Nullable
+        public FormattedCharSequence ownerName;
+    }
 
-                    Component title = tile.getTitle();
-                    //poseStack.mulPose(entityRenderer.cameraOrientation());
-                    //float f1 = minecraft.options.getBackgroundOpacity(0.25F);
-                    int opacity = 0;// (int) (f1 * 255.0F) << 24;
+    @Override
+    public void extractRenderState(T tile, S state, float partialTicks, Vec3 cameraPosition,
+                                   ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
+        BlockEntityRenderer.super.extractRenderState(tile, state, partialTicks, cameraPosition, breakProgress);
+        state.facing = tile.getBlockState().getValue(BaseFrameBlock.FACING);
+        state.veryNear = LOD.at(tile).isVeryNear();
+        state.title = null;
+        state.ownerName = null;
 
-                    if (title != null) {
-
-
-                        poseStack.pushPose();
-
-                        float width = font.width(title);
-                        float scale = 0.025f;
-                        if (width > 48) {
-                            scale /= width / 48;
-                        }
-
-                        poseStack.translate(0, offset + 4 * scale, 0.0125);
-                        poseStack.scale(scale, -scale, scale);
-                        Matrix4f matrix4f = poseStack.last().pose();
-
-                        float dx = -width / 2f;
-
-
-                        font.drawInBatch(title, dx, 0, tile.getTitleColor().getColor(),
-                                true, matrix4f, buffer, Font.DisplayMode.POLYGON_OFFSET, opacity, light);
-                        poseStack.popPose();
-
-                    }
-
-                    Component name = tile.getOwnerName();
-                    if (name != null) {
-                        poseStack.pushPose();
-
-                        float width = font.width(name);
-                        float scale = 0.025f;
-                        if (width > 48) {
-                            scale /= width / 48;
-                        }
-
-                        poseStack.translate(0, -offset + 4 * scale, 0.0125);
-                        poseStack.scale(scale, -scale, scale);
-                        var matrix4f = poseStack.last().pose();
-
-                        float dx = -width / 2;
-
-                        font.drawInBatch(name, dx, 0, -1, true, matrix4f, buffer,
-                                Font.DisplayMode.POLYGON_OFFSET, opacity, light);
-                        poseStack.popPose();
-                    }
-                }
+        if (Minecraft.renderNames() && state.veryNear && isLookingAt(tile.getBlockPos())) {
+            Component title = tile.getTitle();
+            if (title != null) {
+                state.title = title.getVisualOrderText();
+                state.titleColor = ARGB.opaque(tile.getTitleColor().getColor());
             }
+            Component name = tile.getOwnerName();
+            if (name != null) state.ownerName = name.getVisualOrderText();
         }
+    }
+
+    private boolean isLookingAt(BlockPos pos) {
+        HitResult hit = minecraft.hitResult;
+        return hit != null && hit.getType() == HitResult.Type.BLOCK && pos.equals(BlockPos.containing(hit.getLocation()));
+    }
+
+    public void submitTopTextBottomText(S state, PoseStack poseStack, SubmitNodeCollector collector, float offset) {
+        if (state.title != null) {
+            submitCenteredLine(state.title, state.titleColor, state, poseStack, collector, offset);
+        }
+        if (state.ownerName != null) {
+            submitCenteredLine(state.ownerName, -1, state, poseStack, collector, -offset);
+        }
+    }
+
+    private void submitCenteredLine(FormattedCharSequence line, int color, S state, PoseStack poseStack,
+                                    SubmitNodeCollector collector, float y) {
+        poseStack.pushPose();
+
+        float width = font.width(line);
+        float scale = 0.025f;
+        if (width > 48) {
+            scale /= width / 48;
+        }
+
+        poseStack.translate(0, y + 4 * scale, 0.0125);
+        poseStack.scale(scale, -scale, scale);
+
+        collector.submitText(poseStack, -width / 2f, 0, line, true, Font.DisplayMode.POLYGON_OFFSET,
+                state.lightCoords, color, 0, 0);
+        poseStack.popPose();
     }
 
 }

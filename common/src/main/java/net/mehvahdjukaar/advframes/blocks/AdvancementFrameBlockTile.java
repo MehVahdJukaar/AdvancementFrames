@@ -6,23 +6,22 @@ import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementType;
 import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.component.ResolvableProfile;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 
 public class AdvancementFrameBlockTile extends BaseFrameBlockTile {
 
     @Nullable
-    private ResourceLocation advancementId = null;
+    private Identifier advancementId = null;
     @Nullable
     private DisplayInfo advancementDisplay = null;
 
@@ -33,33 +32,31 @@ public class AdvancementFrameBlockTile extends BaseFrameBlockTile {
     public void setAdvancement(AdvancementHolder advancement, ServerPlayer player) {
         this.advancementDisplay = advancement.value().display().orElse(null);
         this.advancementId = advancement.id();
-        this.setOwner(new ResolvableProfile(player.getGameProfile()));
+        this.setOwner(ResolvableProfile.createResolved(player.getGameProfile()));
     }
 
 
     @Override
-    protected void saveAdditional(CompoundTag cmp, HolderLookup.Provider registries) {
-        super.saveAdditional(cmp, registries);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
         if (this.advancementDisplay != null) {
-            if (this.level instanceof ServerLevel server && this.owner != null && this.advancementId != null && this.owner.isResolved()) {
+            if (this.level instanceof ServerLevel server && this.owner != null && this.advancementId != null) {
                 AdvancementHolder advancement = server.getServer().getAdvancements().get(this.advancementId);
-                Player player = this.level.getPlayerByUUID(this.owner.id().get());
+                Player player = this.level.getPlayerByUUID(this.getOwnerId());
                 if (advancement == null || (player instanceof ServerPlayer sp && !sp.getAdvancements()
                         .getOrStartProgress(advancement).isDone())) {
                     return;
                 }
             }
-            cmp.put("Advancement", DisplayInfo.CODEC.encodeStart(NbtOps.INSTANCE, this.advancementDisplay).getOrThrow());
+            output.store("Advancement", DisplayInfo.CODEC, this.advancementDisplay);
         }
     }
 
     @Override
-    protected void loadAdditional(CompoundTag cmp, HolderLookup.Provider registries) {
-        super.loadAdditional(cmp, registries);
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
         this.advancementId = null;
-        var ops = registries.createSerializationContext(NbtOps.INSTANCE);
-        DisplayInfo.CODEC.parse(ops, cmp.getCompound("Advancement"))
-                .ifSuccess(a -> this.advancementDisplay = a);
+        input.read("Advancement", DisplayInfo.CODEC).ifPresent(a -> this.advancementDisplay = a);
         //remove
         if (level != null) {
             var t = AdvancementFrameBlock.Type.get(advancementDisplay);

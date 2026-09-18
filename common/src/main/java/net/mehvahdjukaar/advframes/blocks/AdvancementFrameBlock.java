@@ -5,11 +5,10 @@ import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.mehvahdjukaar.advframes.AdvFramesClient;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.DisplayInfo;
-import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -65,7 +64,7 @@ public class AdvancementFrameBlock extends BaseFrameBlock {
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             if (level.getBlockEntity(pos) instanceof AdvancementFrameBlockTile tile) {
                 if (tile.getAdvancement() == null) {
                     AdvFramesClient.setAdvancementScreen(tile, player);
@@ -75,20 +74,20 @@ public class AdvancementFrameBlock extends BaseFrameBlock {
                     if (ownerName != null) {
                         DisplayInfo advancement = tile.getAdvancement();
                         if (player.isSecondaryUseActive()) {
-                            player.displayClientMessage(advancement.getDescription(), true);
+                            player.sendOverlayMessage(advancement.getDescription());
                         } else {
                             Component name = ownerName.copy().withStyle(ChatFormatting.GOLD);
                             Component title = Component.literal(advancement.getTitle().getString())
                                     .withStyle(tile.getTitleColor());
 
-                            player.displayClientMessage(Component.translatable(
-                                    "advancementframes.message.advancement", name, title), true);
+                            player.sendOverlayMessage(Component.translatable(
+                                    "advancementframes.message.advancement", name, title));
                         }
                     }
                 }
             }
         }
-        return InteractionResult.sidedSuccess(level.isClientSide);
+        return InteractionResult.SUCCESS;
     }
 
 
@@ -116,7 +115,7 @@ public class AdvancementFrameBlock extends BaseFrameBlock {
 
         @ClientOnly
         @Nullable
-        public ModelResourceLocation getModel() {
+        public Identifier getModel() {
             return switch (this) {
                 case GOAL -> AdvFramesClient.GOAL_MODEL;
                 case TASK -> AdvFramesClient.TASK_MODEL;
